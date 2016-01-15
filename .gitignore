@@ -1,0 +1,14 @@
+/.gradle*
+/.idea*
+/build/*
+/gradle/*
+/gradlew*
+/out*
+*.iml
+*.swp
+local.properties
+*~
+build-local.gradle
+gradle.properties
+settings-local.gradle
+screenshots/
