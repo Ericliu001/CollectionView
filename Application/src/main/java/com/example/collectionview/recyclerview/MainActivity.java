@@ -25,10 +25,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.collectionview.widget.CollectionView;
-import com.example.collectionview.widget.CollectionViewCallbacks;
+import com.example.android.recyclerview.R;
 import com.example.collectionview.common.activities.SampleActivityBase;
 import com.example.collectionview.common.logger.Log;
+import com.example.collectionview.widget.CollectionView;
+import com.example.collectionview.widget.CollectionViewCallbacks;
 
 /**
  * A simple launcher activity containing a summary sample description, sample log and a custom

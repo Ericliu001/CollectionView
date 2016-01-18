@@ -16,13 +16,14 @@
 
 package com.example.collectionview.recyclerview;
 
-import com.example.collectionview.common.logger.Log;
-
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.android.recyclerview.R;
+import com.example.collectionview.common.logger.Log;
 
 /**
  * Provide views to RecyclerView with data from mDataSet.
