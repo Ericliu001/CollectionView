@@ -34,10 +34,10 @@ public class CollectionView extends RecyclerView {
 
     public CollectionView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mAdapter = new MyListAdapter();
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         this.setLayoutManager(layoutManager);
+        mAdapter = new MyListAdapter();
         setAdapter(mAdapter);
     }
 
@@ -171,6 +171,7 @@ public class CollectionView extends RecyclerView {
                 result.positionInGroup = -1;
                 return result;
             }
+            rowPointer++;
 
             positionInGroup = 0;
             while (positionInGroup < group.mItems.size()) {

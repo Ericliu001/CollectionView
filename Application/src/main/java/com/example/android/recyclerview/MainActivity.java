@@ -55,20 +55,25 @@ public class MainActivity extends SampleActivityBase implements CollectionViewCa
         CollectionView.Inventory inventory = new CollectionView.Inventory();
 
         CollectionView.InventoryGroup group1 = new CollectionView.InventoryGroup(0);
-        group1.setHeaderItem("This is a Header");
-        group1.addItem("This is good");
-        group1.addItem("hello world");
+        group1.setHeaderItem("Header 1");
+        group1.addItem("Group one, item 1");
+        group1.addItem("Group one, item 2");
         inventory.addGroup(group1);
 
-//        CollectionView.InventoryGroup group2 = new CollectionView.InventoryGroup(1);
-//        group2.setHeaderItem("Group 2");
-//        group2.addItem("Ha ha 2");
-//        group2.addItem("Great 2");
-//        group2.addItem("Bored 2");
-//        inventory.addGroup(group2);
+        CollectionView.InventoryGroup group2 = new CollectionView.InventoryGroup(1);
+        group2.setHeaderItem("Header 2");
+        group2.addItem("Group two, item 1");
+        group2.addItem("Group two, item 2");
+        group2.addItem("Group two, item 3");
+        inventory.addGroup(group2);
 
 
-
+        CollectionView.InventoryGroup group3 = new CollectionView.InventoryGroup(1);
+        group3.setHeaderItem("Header 3");
+        group3.addItem("Group three, item 1");
+        group3.addItem("Group three, item 2");
+        group3.addItem("Group three, item 3");
+        inventory.addGroup(group3);
 
         mCollectionView.setCollectionAdapter(this);
         mCollectionView.updateInventory(inventory);
