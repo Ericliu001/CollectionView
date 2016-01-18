@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Developer/Repos/Demo/RecyclerView/Application/src/main/res/values-v11/template-styles.xml -->
+    <!-- From: file:/Users/ericliu/Downloads/RecyclerView/Application/src/main/res/values-v11/template-styles.xml -->
     <eat-comment/>
     <style name="Theme.Base" parent="android:Theme.Holo.Light"/>
 </resources>

@@ -3,6 +3,7 @@ package com.example.android.collectionview;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
@@ -12,7 +13,9 @@ import java.util.ArrayList;
  * Created by L078865 on 15/01/2016.
  */
 public class CollectionView extends RecyclerView {
-
+    private static final String TAG = CollectionView.class.getSimpleName();
+    private static final int VIEWTYPE_HEADER = 0;
+    private static final int VIEW_TYPE_NON_HEADER = 10;
 
     private Inventory mInventory = new Inventory();
     private CollectionViewCallbacks mCallbacks = null;
@@ -49,34 +52,125 @@ public class CollectionView extends RecyclerView {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return null;
+            return getRowViewHolder(parent, viewType);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-
+            populatRoweData(holder, position);
         }
+
+        @Override
+        public int getItemViewType(int position) {
+            RowInformation rowInfo = computeRowContent(position);
+            if (rowInfo.isComputedSuccessful) {
+                if (rowInfo.isHeader) {
+                    return VIEWTYPE_HEADER;
+                } else {
+                    return VIEW_TYPE_NON_HEADER + mInventory.getGroupIndex(rowInfo.groupId);
+                }
+
+            } else {
+                Log.e(TAG, "Invalid row passed to getItemViewType: " + position);
+                return 0;
+            }
+        }
+
 
         @Override
         public int getItemCount() {
             int rowCount = 0;
+            for (InventoryGroup group : mInventory.mGroups) {
+                int thisGroupRowCount = group.getRowCount();
+                rowCount += thisGroupRowCount;
+            }
 
-
-            return 0;
+            return rowCount;
         }
     }
 
+    private void populatRoweData(ViewHolder holder, int position) {
+        RowInformation rowInfo = computeRowContent(position);
+        if (!rowInfo.isComputedSuccessful) {
+            return;
+        }
 
-    private static class RowComputeResult {
-        int row;
-        int groupId;
-        InventoryGroup group;
-        int groupOffset;
+        if (rowInfo.isHeader) {
+            mCallbacks.bindCollectionHeaderView(getContext(), holder, rowInfo.group.getHeaderItem());
+        } else {
+            Object item = rowInfo.group.getItem(rowInfo.positionInGroup);
+            mCallbacks.bindCollectionItemView(getContext(), holder, rowInfo.groupId, item);
+        }
+
+    }
+
+    private ViewHolder getRowViewHolder(ViewGroup parent, int viewType) {
+        if (mCallbacks == null) {
+            Log.e(TAG, "Call to makeRow without an adapter installed");
+            return null;
+        }
+
+
+        if (viewType == VIEWTYPE_HEADER) {
+            // return header ViewHolder
+            return mCallbacks.newCollectionHeaderView(getContext(), parent);
+        } else {
+            int groupIndex = viewType - VIEW_TYPE_NON_HEADER;
+            int groupId = mInventory.mGroups.get(groupIndex).mGroupId;
+            // return item ViewHolder
+            return mCallbacks.newCollectionItemView(getContext(), groupId, parent);
+        }
+
     }
 
 
-    private boolean computeRowContent(int row, RowComputeResult result) {
-        return false;
+    private static class RowInformation {
+        boolean isComputedSuccessful = false;
+        int row;
+        boolean isHeader;
+        int groupId;
+        InventoryGroup group;
+        int positionInGroup;
+    }
+
+
+    private RowInformation computeRowContent(int row) {
+        RowInformation result = new RowInformation();
+        int rowPointer = 0;
+        int positionInGroup;
+
+
+        for (InventoryGroup group : mInventory.mGroups) {
+            if (rowPointer == row) {
+                // row is a group header
+                result.isComputedSuccessful = true;
+                result.row = row;
+                result.isHeader = true;
+                result.groupId = group.mGroupId;
+                result.group = group;
+                result.positionInGroup = -1;
+                return result;
+            }
+
+            positionInGroup = 0;
+            while (positionInGroup < group.mItemCount) {
+                if (rowPointer == row) {
+                    // this is the row we are looking for
+                    result.isComputedSuccessful = true;
+                    result.row = row;
+                    result.isHeader = false;
+                    result.group = group;
+                    result.positionInGroup = positionInGroup;
+                    return result;
+                }
+
+                // move to the next row
+                positionInGroup++;
+                rowPointer++;
+            }
+        }
+
+        return result;
     }
 
 
