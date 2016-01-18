@@ -1,10 +1,12 @@
 package com.example.android.collectionview;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -34,8 +36,10 @@ public class CollectionView extends RecyclerView {
     public CollectionView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mAdapter = new MyListAdapter();
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        this.setLayoutManager(layoutManager);
         setAdapter(mAdapter);
-
     }
 
 
@@ -90,6 +94,10 @@ public class CollectionView extends RecyclerView {
     }
 
     private void populatRoweData(ViewHolder holder, int position) {
+        if (mCallbacks == null) {
+            return;
+        }
+
         RowInformation rowInfo = computeRowContent(position);
         if (!rowInfo.isComputedSuccessful) {
             return;
@@ -105,20 +113,33 @@ public class CollectionView extends RecyclerView {
     }
 
     private ViewHolder getRowViewHolder(ViewGroup parent, int viewType) {
+        ViewHolder placeHolder = new ViewHolder(new View(getContext())) {
+            @Override
+            public String toString() {
+                return super.toString();
+            }
+        };
         if (mCallbacks == null) {
             Log.e(TAG, "Call to makeRow without an adapter installed");
-            return null;
+            return placeHolder;
         }
 
 
+        ViewHolder holder;
         if (viewType == VIEWTYPE_HEADER) {
             // return header ViewHolder
-            return mCallbacks.newCollectionHeaderView(getContext(), parent);
+            holder =  mCallbacks.newCollectionHeaderView(getContext(), parent);
         } else {
             int groupIndex = viewType - VIEW_TYPE_NON_HEADER;
             int groupId = mInventory.mGroups.get(groupIndex).mGroupId;
             // return item ViewHolder
-            return mCallbacks.newCollectionItemView(getContext(), groupId, parent);
+            holder = mCallbacks.newCollectionItemView(getContext(), groupId, parent);
+        }
+
+        if (holder != null) {
+            return holder;
+        } else {
+            return  placeHolder;
         }
 
     }

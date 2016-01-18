@@ -22,8 +22,7 @@ import android.view.ViewGroup;
 
 /**
  * Defines an interface to the callbacks that a {@link CollectionView} will be called to create each
- * elements of the collection. Alternatively you can implement {@link GroupCollectionViewCallbacks}
- * if you also want to define a custom container for each collection groups.
+ * elements of the collection.
  */
 public interface CollectionViewCallbacks {
 
