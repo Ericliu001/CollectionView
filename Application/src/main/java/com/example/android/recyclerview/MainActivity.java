@@ -20,11 +20,15 @@ package com.example.android.recyclerview;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.android.collectionview.CollectionView;
 import com.example.android.collectionview.CollectionViewCallbacks;
 import com.example.android.common.activities.SampleActivityBase;
+import com.example.android.common.logger.Log;
 
 /**
  * A simple launcher activity containing a summary sample description, sample log and a custom
@@ -49,37 +53,77 @@ public class MainActivity extends SampleActivityBase implements CollectionViewCa
 
 
         CollectionView.Inventory inventory = new CollectionView.Inventory();
-        CollectionView.InventoryGroup group = new CollectionView.InventoryGroup(0);
+
+        CollectionView.InventoryGroup group1 = new CollectionView.InventoryGroup(0);
+        group1.setHeaderItem("This is a Header");
+        group1.addItem("This is good");
+        group1.addItem("hello world");
+        inventory.addGroup(group1);
+
+//        CollectionView.InventoryGroup group2 = new CollectionView.InventoryGroup(1);
+//        group2.setHeaderItem("Group 2");
+//        group2.addItem("Ha ha 2");
+//        group2.addItem("Great 2");
+//        group2.addItem("Bored 2");
+//        inventory.addGroup(group2);
 
 
-        group.addItem("This is good");
-        group.addItem("hello world");
 
-        inventory.addGroup(group);
-
-        mCollectionView.updateInventory(inventory);
 
         mCollectionView.setCollectionAdapter(this);
+        mCollectionView.updateInventory(inventory);
+
     }
 
 
     @Override
     public RecyclerView.ViewHolder newCollectionHeaderView(Context context, ViewGroup parent) {
-        return null;
+        // Create a new view.
+        View v = LayoutInflater.from(context)
+                .inflate(R.layout.text_row_item, parent, false);
+
+        return new MyViewHolder(v);
     }
 
     @Override
     public RecyclerView.ViewHolder newCollectionItemView(Context context, int groupId, ViewGroup parent) {
-        return null;
+        // Create a new view.
+        View v = LayoutInflater.from(context)
+                .inflate(R.layout.text_row_item, parent, false);
+
+        return new MyViewHolder(v);
     }
 
     @Override
     public void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, Object headerItem) {
-
+        ((MyViewHolder)holder).getTextView().setText((String)headerItem);
     }
 
     @Override
     public void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupId, Object item) {
+        ((MyViewHolder)holder).getTextView().setText((String)item);
+    }
 
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+
+        private final TextView textView;
+
+        public MyViewHolder(View v) {
+            super(v);
+            // Define click listener for the ViewHolder's View.
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "Element " + getPosition() + " clicked.");
+                }
+            });
+            textView = (TextView) v.findViewById(R.id.textView);
+        }
+
+        public TextView getTextView() {
+            return textView;
+        }
     }
 }
+

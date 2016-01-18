@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -112,11 +111,11 @@ public class CollectionView extends RecyclerView {
 
     }
 
-    private ViewHolder getRowViewHolder(ViewGroup parent, int viewType) {
+    private ViewHolder getRowViewHolder(ViewGroup parent, final int viewType) {
         ViewHolder placeHolder = new ViewHolder(new View(getContext())) {
             @Override
             public String toString() {
-                return super.toString();
+                return "Invalid Item, view type: " + viewType;
             }
         };
         if (mCallbacks == null) {
@@ -128,7 +127,7 @@ public class CollectionView extends RecyclerView {
         ViewHolder holder;
         if (viewType == VIEWTYPE_HEADER) {
             // return header ViewHolder
-            holder =  mCallbacks.newCollectionHeaderView(getContext(), parent);
+            holder = mCallbacks.newCollectionHeaderView(getContext(), parent);
         } else {
             int groupIndex = viewType - VIEW_TYPE_NON_HEADER;
             int groupId = mInventory.mGroups.get(groupIndex).mGroupId;
@@ -139,7 +138,7 @@ public class CollectionView extends RecyclerView {
         if (holder != null) {
             return holder;
         } else {
-            return  placeHolder;
+            return placeHolder;
         }
 
     }
@@ -174,7 +173,7 @@ public class CollectionView extends RecyclerView {
             }
 
             positionInGroup = 0;
-            while (positionInGroup < group.mItemCount) {
+            while (positionInGroup < group.mItems.size()) {
                 if (rowPointer == row) {
                     // this is the row we are looking for
                     result.isComputedSuccessful = true;
@@ -204,10 +203,8 @@ public class CollectionView extends RecyclerView {
 
         private Object mHeaderItem;
         private int mDataIndexStart = 0;
-        private int mItemCount = 0;
 
-        private SparseArray<Object> mItems = new SparseArray<>();
-        private SparseArray<Integer> mItemCustomDataIndices = new SparseArray<>();
+        private ArrayList<Object> mItems = new ArrayList<>();
 
         public InventoryGroup(int groupId) {
             mGroupId = groupId;
@@ -218,9 +215,7 @@ public class CollectionView extends RecyclerView {
             mGroupId = copyFrom.mGroupId;
             mHeaderItem = copyFrom.mHeaderItem;
             mDataIndexStart = copyFrom.mDataIndexStart;
-            mItemCount = copyFrom.mItemCount;
-            mItems = copyFrom.cloneSparseArray(copyFrom.mItems);
-            mItemCustomDataIndices = cloneSparseArray(copyFrom.mItemCustomDataIndices);
+            mItems = (ArrayList<Object>) copyFrom.mItems.clone();
         }
 
 
@@ -239,43 +234,18 @@ public class CollectionView extends RecyclerView {
         }
 
 
-        public int getDataIndex(int indexInGroup) {
-            return mItemCustomDataIndices.get(indexInGroup, mDataIndexStart + indexInGroup);
-        }
-
-        public InventoryGroup setItemCount(int count) {
-            mItemCount = count;
-            return this;
-        }
-
-
-        public InventoryGroup setItem(int index, Object item) {
-            mItems.put(index, item);
-            return this;
-        }
-
-        public InventoryGroup addItem(Object item) {
-            setItem(mItemCount, item);
-            mItemCount++;
-            return this;
+        public void addItem(Object item) {
+            mItems.add(item);
         }
 
 
         public int getRowCount() {
-            return 1 + mItemCount;
+            return 1 + mItems.size();
         }
 
 
         public Object getItem(int index) {
-            return mItems.get(index, null);
-        }
-
-        private static <E> SparseArray<E> cloneSparseArray(SparseArray<E> orig) {
-            SparseArray<E> result = new SparseArray<E>();
-            for (int i = 0; i < orig.size(); i++) {
-                result.put(orig.keyAt(i), orig.valueAt(i));
-            }
-            return result;
+            return mItems.get(index);
         }
 
     }
@@ -300,7 +270,7 @@ public class CollectionView extends RecyclerView {
         }
 
         public void addGroup(InventoryGroup group) {
-            if (group.mItemCount > 0) {
+            if (group.mItems.size() > 0) {
                 mGroups.add(new InventoryGroup(group));
             }
         }
@@ -309,7 +279,7 @@ public class CollectionView extends RecyclerView {
         public int getTotalItemCount() {
             int total = 0;
             for (InventoryGroup group : mGroups) {
-                total += group.mItemCount;
+                total += group.mItems.size();
             }
             return total;
         }
