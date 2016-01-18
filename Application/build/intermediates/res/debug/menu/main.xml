@@ -19,4 +19,4 @@
           android:showAsAction="always"
           android:title="@string/sample_show_log" />
 </menu>
-<!-- From: file:/Users/ericliu/Downloads/RecyclerView/Application/src/main/res/menu/main.xml -->
+<!-- From: file:/Users/ericliu/Developer/Android/Repositories/EricLiu/CollectionViewExample/Application/src/main/res/menu/main.xml -->

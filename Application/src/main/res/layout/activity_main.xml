@@ -20,12 +20,12 @@
       android:layout_height="match_parent"
       android:id="@+id/sample_main_layout">
 
-    <com.example.android.collectionview.CollectionView
+    <com.example.collectionview.widget.CollectionView
         android:id="@+id/collectionView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </com.example.android.collectionview.CollectionView>
+    </com.example.collectionview.widget.CollectionView>
 
 </LinearLayout>
 
