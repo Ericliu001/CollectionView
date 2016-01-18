@@ -156,12 +156,12 @@ public class CollectionView extends RecyclerView {
 
     private RowInformation computeRowContent(int row) {
         RowInformation result = new RowInformation();
-        int rowPointer = 0;
+        int rowCounter = 0;
         int positionInGroup;
 
 
         for (InventoryGroup group : mInventory.mGroups) {
-            if (rowPointer == row) {
+            if (rowCounter == row) {
                 // row is a group header
                 result.isComputedSuccessful = true;
                 result.row = row;
@@ -171,11 +171,11 @@ public class CollectionView extends RecyclerView {
                 result.positionInGroup = -1;
                 return result;
             }
-            rowPointer++;
+            rowCounter++; // incremented by 1 because it just past the Header row
 
             positionInGroup = 0;
             while (positionInGroup < group.mItems.size()) {
-                if (rowPointer == row) {
+                if (rowCounter == row) {
                     // this is the row we are looking for
                     result.isComputedSuccessful = true;
                     result.row = row;
@@ -187,7 +187,7 @@ public class CollectionView extends RecyclerView {
 
                 // move to the next row
                 positionInGroup++;
-                rowPointer++;
+                rowCounter++;
             }
         }
 
