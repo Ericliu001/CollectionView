@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -51,7 +52,7 @@ public class CollectionView extends RecyclerView {
         mAdapter.notifyDataSetChanged();
     }
 
-    protected class MyListAdapter extends RecyclerView.Adapter {
+    protected class MyListAdapter extends Adapter {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -70,7 +71,7 @@ public class CollectionView extends RecyclerView {
                 if (rowInfo.isHeader) {
                     return VIEWTYPE_HEADER;
                 } else {
-                    return VIEW_TYPE_NON_HEADER + mInventory.getGroupIndex(rowInfo.groupId);
+                    return VIEW_TYPE_NON_HEADER + mInventory.mGroups.indexOfKey(rowInfo.groupId);
                 }
 
             } else {
@@ -83,7 +84,10 @@ public class CollectionView extends RecyclerView {
         @Override
         public int getItemCount() {
             int rowCount = 0;
-            for (InventoryGroup group : mInventory.mGroups) {
+
+            for (int i = 0; i < mInventory.mGroups.size(); i++) {
+                int key = mInventory.mGroups.keyAt(i);
+                InventoryGroup group = mInventory.mGroups.get(key);
                 int thisGroupRowCount = group.getRowCount();
                 rowCount += thisGroupRowCount;
             }
@@ -130,7 +134,8 @@ public class CollectionView extends RecyclerView {
             holder = mCallbacks.newCollectionHeaderView(getContext(), parent);
         } else {
             int groupIndex = viewType - VIEW_TYPE_NON_HEADER;
-            int groupId = mInventory.mGroups.get(groupIndex).mGroupId;
+            int key = mInventory.mGroups.keyAt(groupIndex);
+            int groupId = mInventory.mGroups.get(key).mGroupId;
             // return item ViewHolder
             holder = mCallbacks.newCollectionItemView(getContext(), groupId, parent);
         }
@@ -160,7 +165,9 @@ public class CollectionView extends RecyclerView {
         int positionInGroup;
 
 
-        for (InventoryGroup group : mInventory.mGroups) {
+        for (int i = 0; i < mInventory.mGroups.size(); i++) {
+            int key = mInventory.mGroups.keyAt(i);
+            InventoryGroup group = mInventory.mGroups.get(key);
             if (rowCounter == row) {
                 // row is a group header
                 result.isComputedSuccessful = true;
@@ -180,6 +187,7 @@ public class CollectionView extends RecyclerView {
                     result.isComputedSuccessful = true;
                     result.row = row;
                     result.isHeader = false;
+                    result.groupId = group.mGroupId;
                     result.group = group;
                     result.positionInGroup = positionInGroup;
                     return result;
@@ -258,29 +266,29 @@ public class CollectionView extends RecyclerView {
      * header.
      */
     public static class Inventory {
-        private ArrayList<InventoryGroup> mGroups = new ArrayList<>();
+        private SparseArray<InventoryGroup> mGroups = new SparseArray<>();;
 
         public Inventory() {
         }
 
 
         public Inventory(Inventory copyFrom) {
-            for (InventoryGroup group : copyFrom.mGroups) {
-                mGroups.add(group);
-            }
+            mGroups = copyFrom.mGroups.clone();
         }
 
         public void addGroup(InventoryGroup group) {
             if (group.mItems.size() > 0) {
-                mGroups.add(new InventoryGroup(group));
+                mGroups.put(group.mGroupId, new InventoryGroup(group));
             }
         }
 
 
         public int getTotalItemCount() {
             int total = 0;
-            for (InventoryGroup group : mGroups) {
-                total += group.mItems.size();
+
+            for (int i = 0; i < mGroups.size(); i++) {
+                int key = mGroups.keyAt(i);
+                total += mGroups.get(key).mItems.size();
             }
             return total;
         }
@@ -291,7 +299,8 @@ public class CollectionView extends RecyclerView {
 
         public int getGroupIndex(int groupId) {
             for (int i = 0; i < mGroups.size(); i++) {
-                if (mGroups.get(i).mGroupId == groupId) {
+                int key = mGroups.keyAt(i);
+                if (mGroups.get(key).mGroupId == groupId) {
                     return i;
                 }
             }
