@@ -55,13 +55,13 @@ public class MainActivity extends SampleActivityBase implements CollectionViewCa
 
         CollectionView.Inventory inventory = new CollectionView.Inventory();
 
-        CollectionView.InventoryGroup group1 = new CollectionView.InventoryGroup(0);
+        CollectionView.InventoryGroup group1 = new CollectionView.InventoryGroup(-2);
         group1.setHeaderItem("Header 1");
         group1.addItem("Group one, item 1");
         group1.addItem("Group one, item 2");
         inventory.addGroup(group1);
 
-        CollectionView.InventoryGroup group2 = new CollectionView.InventoryGroup(1);
+        CollectionView.InventoryGroup group2 = new CollectionView.InventoryGroup(10);
         group2.setHeaderItem("Header 2");
         group2.addItem("Group two, item 1");
         group2.addItem("Group two, item 2");
