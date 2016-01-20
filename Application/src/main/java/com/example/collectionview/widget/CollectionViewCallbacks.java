@@ -31,8 +31,14 @@ public interface CollectionViewCallbacks {
      */
     RecyclerView.ViewHolder newCollectionHeaderView(Context context, ViewGroup parent);
 
+
     /**
      * Returns a new custom View that will be used for each of the collection item.
+     *
+     * @param context
+     * @param groupId - the groupId decides the sequence of groups being displayed, the smallest int is displayed first and in an asending order
+     * @param parent
+     * @return
      */
     RecyclerView.ViewHolder newCollectionItemView(Context context, int groupId, ViewGroup parent);
 

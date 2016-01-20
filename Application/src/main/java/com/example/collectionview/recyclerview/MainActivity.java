@@ -55,7 +55,7 @@ public class MainActivity extends SampleActivityBase implements CollectionViewCa
 
         CollectionView.Inventory inventory = new CollectionView.Inventory();
 
-        CollectionView.InventoryGroup group1 = new CollectionView.InventoryGroup(-2);
+        CollectionView.InventoryGroup group1 = new CollectionView.InventoryGroup(-2); // groupId is the smallest, displayed first
         group1.setHeaderItem("Header 1");
         group1.addItem("Group one, item 1");
         group1.addItem("Group one, item 2");
@@ -69,7 +69,7 @@ public class MainActivity extends SampleActivityBase implements CollectionViewCa
         inventory.addGroup(group2);
 
 
-        CollectionView.InventoryGroup group3 = new CollectionView.InventoryGroup(2);
+        CollectionView.InventoryGroup group3 = new CollectionView.InventoryGroup(2); // 2 is smaller than 10, displayed second
         group3.setHeaderItem("Header 3");
         group3.addItem("Group three, item 1");
         group3.addItem("Group three, item 2");
