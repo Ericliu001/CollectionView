@@ -38,7 +38,7 @@ import com.example.collectionview.widget.CollectionViewCallbacks;
  * For devices with displays with a width of 720dp or greater, the sample log is always visible,
  * on other devices it's visibility is controlled by an item on the Action Bar.
  */
-public class MainActivity extends SampleActivityBase implements CollectionViewCallbacks {
+public class MainActivity extends SampleActivityBase implements CollectionViewCallbacks<String, Object> {
 
     public static final String TAG = "MainActivity";
 
@@ -101,7 +101,7 @@ public class MainActivity extends SampleActivityBase implements CollectionViewCa
     }
 
     @Override
-    public void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, Object headerItem) {
+    public void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, String headerItem) {
         ((MyViewHolder)holder).getTextView().setText((String)headerItem);
     }
 

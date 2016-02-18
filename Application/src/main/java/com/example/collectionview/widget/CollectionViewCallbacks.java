@@ -24,7 +24,7 @@ import android.view.ViewGroup;
  * Defines an interface to the callbacks that a {@link CollectionView} will be called to create each
  * elements of the collection.
  */
-public interface CollectionViewCallbacks {
+public interface CollectionViewCallbacks<T1, T2> {
 
     /**
      * Returns a new custom View that will be used for each of the collection group headers.
@@ -45,12 +45,12 @@ public interface CollectionViewCallbacks {
     /**
      * Binds the given data (like the header label) with the given collection group header View.
      */
-    void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, Object headerItem);
+    void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, T1 headerItem);
 
     /**
      * Binds the given data with the given collection item View.
      */
-    void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupId, Object item);
+    void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupId, T2 item);
 
 
 }
