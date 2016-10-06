@@ -145,7 +145,7 @@ public class CollectionView extends RecyclerView {
         } else {
             int groupIndex = viewType - VIEW_TYPE_NON_HEADER;
             int key = mInventory.mGroups.keyAt(groupIndex);
-            int groupId = mInventory.mGroups.get(key).mGroupId;
+            int groupId = mInventory.mGroups.get(key).mOrdinal;
             // return item ViewHolder
             holder = mCallbacks.newCollectionItemView(getContext(), groupId, parent);
         }
@@ -183,7 +183,7 @@ public class CollectionView extends RecyclerView {
                 result.isComputedSuccessful = true;
                 result.row = row;
                 result.isHeader = true;
-                result.groupId = group.mGroupId;
+                result.groupId = group.mOrdinal;
                 result.group = group;
                 result.positionInGroup = -1;
                 return result;
@@ -197,7 +197,7 @@ public class CollectionView extends RecyclerView {
                     result.isComputedSuccessful = true;
                     result.row = row;
                     result.isHeader = false;
-                    result.groupId = group.mGroupId;
+                    result.groupId = group.mOrdinal;
                     result.group = group;
                     result.positionInGroup = positionInGroup;
                     return result;
@@ -217,7 +217,7 @@ public class CollectionView extends RecyclerView {
      * Represents a group of items with a header to be displayed in the {@link CollectionView}.
      */
     public static class InventoryGroup {
-        private int mGroupId = 0;
+        private int mOrdinal = 0;
 
 
         private Object mHeaderItem;
@@ -225,13 +225,13 @@ public class CollectionView extends RecyclerView {
 
         private ArrayList<Object> mItems = new ArrayList<>();
 
-        public InventoryGroup(int groupId) {
-            mGroupId = groupId;
+        public InventoryGroup(int oridinal) {
+            mOrdinal = oridinal;
         }
 
 
         public InventoryGroup(InventoryGroup copyFrom) {
-            mGroupId = copyFrom.mGroupId;
+            mOrdinal = copyFrom.mOrdinal;
             mHeaderItem = copyFrom.mHeaderItem;
             mDataIndexStart = copyFrom.mDataIndexStart;
             mItems = (ArrayList<Object>) copyFrom.mItems.clone();
@@ -289,7 +289,7 @@ public class CollectionView extends RecyclerView {
 
         public void addGroup(InventoryGroup group) {
             if (group.mItems.size() > 0) {
-                mGroups.put(group.mGroupId, new InventoryGroup(group));
+                mGroups.put(group.mOrdinal, new InventoryGroup(group));
             }
         }
 
@@ -311,7 +311,7 @@ public class CollectionView extends RecyclerView {
         public int getGroupIndex(int groupId) {
             for (int i = 0; i < mGroups.size(); i++) {
                 int key = mGroups.keyAt(i);
-                if (mGroups.get(key).mGroupId == groupId) {
+                if (mGroups.get(key).mOrdinal == groupId) {
                     return i;
                 }
             }
@@ -321,7 +321,7 @@ public class CollectionView extends RecyclerView {
          int getRowCountBeforeGroup(InventoryGroup group) {
             int count = 0;
             for (int i = 0; i < mGroups.size(); i++) {
-                if (group.mGroupId == mGroups.keyAt(i)) {
+                if (group.mOrdinal == mGroups.keyAt(i)) {
                     break;
                 }
                 int key = mGroups.keyAt(i);
