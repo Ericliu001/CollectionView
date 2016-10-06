@@ -89,8 +89,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
         groupx.addItem("Group x, item 1");
         groupx.addItem("Group x, item 2");
         groupx.addItem("Group x, item 3");
-        inventory.addGroup(groupx);
-        mCollectionView.updateInventory(inventory);
+        mCollectionView.addGroup(inventory, groupx);
     }
 
 

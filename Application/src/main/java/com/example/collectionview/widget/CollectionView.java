@@ -52,6 +52,16 @@ public class CollectionView extends RecyclerView {
         mAdapter.notifyDataSetChanged();
     }
 
+    public void addGroup(Inventory inventory, InventoryGroup group) {
+        inventory.addGroup(group);
+        mInventory.addGroup(group);
+        int itemCountBeforeGroup = mInventory.getRowCountBeforeGroup(group);
+
+        mAdapter.notifyItemRangeInserted(itemCountBeforeGroup, group.getRowCount());
+    }
+
+
+
     protected class MyListAdapter extends Adapter {
 
         @Override
@@ -306,6 +316,18 @@ public class CollectionView extends RecyclerView {
                 }
             }
             return -1;
+        }
+
+         int getRowCountBeforeGroup(InventoryGroup group) {
+            int count = 0;
+            for (int i = 0; i < mGroups.size(); i++) {
+                if (group.mGroupId == mGroups.keyAt(i)) {
+                    break;
+                }
+                int key = mGroups.keyAt(i);
+                count += mGroups.get(key).getRowCount();
+            }
+            return count;
         }
 
 
