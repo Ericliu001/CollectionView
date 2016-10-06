@@ -36,11 +36,11 @@ public interface CollectionViewCallbacks<T1, T2> {
      * Returns a new custom View that will be used for each of the collection item.
      *
      * @param context
-     * @param groupId - the groupId decides the sequence of groups being displayed, the smallest int is displayed first and in an asending order
+     * @param groupOrdinal - the groupOrdinal decides the sequence of groups being displayed, the smallest int is displayed first and in an asending order
      * @param parent
      * @return
      */
-    RecyclerView.ViewHolder newCollectionItemView(Context context, int groupId, ViewGroup parent);
+    RecyclerView.ViewHolder newCollectionItemView(Context context, int groupOrdinal, ViewGroup parent);
 
     /**
      * Binds the given data (like the header label) with the given collection group header View.
@@ -50,7 +50,7 @@ public interface CollectionViewCallbacks<T1, T2> {
     /**
      * Binds the given data with the given collection item View.
      */
-    void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupId, T2 item);
+    void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, T2 item);
 
 
 }

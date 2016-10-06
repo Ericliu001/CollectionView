@@ -81,7 +81,7 @@ public class CollectionView extends RecyclerView {
                 if (rowInfo.isHeader) {
                     return VIEWTYPE_HEADER;
                 } else {
-                    return VIEW_TYPE_NON_HEADER + mInventory.mGroups.indexOfKey(rowInfo.groupId);
+                    return VIEW_TYPE_NON_HEADER + mInventory.mGroups.indexOfKey(rowInfo.groupOrdinal);
                 }
 
             } else {
@@ -120,7 +120,7 @@ public class CollectionView extends RecyclerView {
             mCallbacks.bindCollectionHeaderView(getContext(), holder, rowInfo.group.getHeaderItem());
         } else {
             Object item = rowInfo.group.getItem(rowInfo.positionInGroup);
-            mCallbacks.bindCollectionItemView(getContext(), holder, rowInfo.groupId, item);
+            mCallbacks.bindCollectionItemView(getContext(), holder, rowInfo.groupOrdinal, item);
         }
 
     }
@@ -145,9 +145,9 @@ public class CollectionView extends RecyclerView {
         } else {
             int groupIndex = viewType - VIEW_TYPE_NON_HEADER;
             int key = mInventory.mGroups.keyAt(groupIndex);
-            int groupId = mInventory.mGroups.get(key).mOrdinal;
+            int groupOrdinal = mInventory.mGroups.get(key).mOrdinal;
             // return item ViewHolder
-            holder = mCallbacks.newCollectionItemView(getContext(), groupId, parent);
+            holder = mCallbacks.newCollectionItemView(getContext(), groupOrdinal, parent);
         }
 
         if (holder != null) {
@@ -163,7 +163,7 @@ public class CollectionView extends RecyclerView {
         boolean isComputedSuccessful = false;
         int row;
         boolean isHeader;
-        int groupId;
+        int groupOrdinal;
         InventoryGroup group;
         int positionInGroup;
     }
@@ -183,7 +183,7 @@ public class CollectionView extends RecyclerView {
                 result.isComputedSuccessful = true;
                 result.row = row;
                 result.isHeader = true;
-                result.groupId = group.mOrdinal;
+                result.groupOrdinal = group.mOrdinal;
                 result.group = group;
                 result.positionInGroup = -1;
                 return result;
@@ -197,7 +197,7 @@ public class CollectionView extends RecyclerView {
                     result.isComputedSuccessful = true;
                     result.row = row;
                     result.isHeader = false;
-                    result.groupId = group.mOrdinal;
+                    result.groupOrdinal = group.mOrdinal;
                     result.group = group;
                     result.positionInGroup = positionInGroup;
                     return result;
@@ -308,10 +308,10 @@ public class CollectionView extends RecyclerView {
             return mGroups.size();
         }
 
-        public int getGroupIndex(int groupId) {
+        public int getGroupIndex(int groupOrdinal) {
             for (int i = 0; i < mGroups.size(); i++) {
                 int key = mGroups.keyAt(i);
-                if (mGroups.get(key).mOrdinal == groupId) {
+                if (mGroups.get(key).mOrdinal == groupOrdinal) {
                     return i;
                 }
             }

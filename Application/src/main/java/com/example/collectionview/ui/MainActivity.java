@@ -103,7 +103,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
     }
 
     @Override
-    public RecyclerView.ViewHolder newCollectionItemView(Context context, int groupId, ViewGroup parent) {
+    public RecyclerView.ViewHolder newCollectionItemView(Context context, int groupOrdinal, ViewGroup parent) {
         // Create a new view.
         View v = LayoutInflater.from(context)
                 .inflate(R.layout.text_row_item, parent, false);
@@ -117,7 +117,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
     }
 
     @Override
-    public void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupId, Object item) {
+    public void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, Object item) {
         ((MyViewHolder) holder).getTextView().setText((String) item);
     }
 
