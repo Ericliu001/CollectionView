@@ -16,7 +16,7 @@
 -->
 
 <resources>
-    <string name="app_name">RecyclerView</string>
+    <string name="app_name">CollectionView</string>
     <string name="intro_message">
         <![CDATA[
         

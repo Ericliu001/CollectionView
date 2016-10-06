@@ -44,6 +44,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
 
 
     private CollectionView mCollectionView;
+    private CollectionView.Inventory inventory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
         mCollectionView = (CollectionView) findViewById(R.id.collectionView);
 
 
-        CollectionView.Inventory inventory = new CollectionView.Inventory();
+        inventory = new CollectionView.Inventory();
 
         CollectionView.InventoryGroup group1 = new CollectionView.InventoryGroup(-2); // groupId is the smallest, displayed first
         group1.setHeaderItem("Header 1");
@@ -69,7 +70,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
         inventory.addGroup(group2);
 
 
-        CollectionView.InventoryGroup group3 = new CollectionView.InventoryGroup(2); // 2 is smaller than 10, displayed second
+        CollectionView.InventoryGroup group3 = new CollectionView.InventoryGroup(12); // 2 is smaller than 10, displayed second
         group3.setHeaderItem("Header 3");
         group3.addItem("Group three, item 1");
         group3.addItem("Group three, item 2");
@@ -79,6 +80,17 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
         mCollectionView.setCollectionAdapter(this);
         mCollectionView.updateInventory(inventory);
 
+    }
+
+
+    public void onButtonClicked(View view) {
+        CollectionView.InventoryGroup groupx = new CollectionView.InventoryGroup(1);
+        groupx.setHeaderItem("Header x");
+        groupx.addItem("Group x, item 1");
+        groupx.addItem("Group x, item 2");
+        groupx.addItem("Group x, item 3");
+        inventory.addGroup(groupx);
+        mCollectionView.updateInventory(inventory);
     }
 
 
@@ -102,12 +114,12 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
 
     @Override
     public void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, String headerItem) {
-        ((MyViewHolder)holder).getTextView().setText((String)headerItem);
+        ((MyViewHolder) holder).getTextView().setText((String) headerItem);
     }
 
     @Override
     public void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupId, Object item) {
-        ((MyViewHolder)holder).getTextView().setText((String)item);
+        ((MyViewHolder) holder).getTextView().setText((String) item);
     }
 
 

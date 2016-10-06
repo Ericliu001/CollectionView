@@ -1,5 +1,7 @@
 package com.example.collectionview.widget;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,8 +10,6 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.ArrayList;
 
 /**
  * Created by Eric Liu on 18/01/2016.
@@ -266,7 +266,8 @@ public class CollectionView extends RecyclerView {
      * header.
      */
     public static class Inventory {
-        private SparseArray<InventoryGroup> mGroups = new SparseArray<>();;
+        private SparseArray<InventoryGroup> mGroups = new SparseArray<>();
+        ;
 
         public Inventory() {
         }
