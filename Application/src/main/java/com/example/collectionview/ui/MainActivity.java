@@ -15,19 +15,19 @@
 */
 
 
-package com.example.collectionview.recyclerview;
+package com.example.collectionview.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.recyclerview.R;
-import com.example.collectionview.common.activities.SampleActivityBase;
-import com.example.collectionview.common.logger.Log;
 import com.example.collectionview.widget.CollectionView;
 import com.example.collectionview.widget.CollectionViewCallbacks;
 
@@ -38,7 +38,7 @@ import com.example.collectionview.widget.CollectionViewCallbacks;
  * For devices with displays with a width of 720dp or greater, the sample log is always visible,
  * on other devices it's visibility is controlled by an item on the Action Bar.
  */
-public class MainActivity extends SampleActivityBase implements CollectionViewCallbacks<String, Object> {
+public class MainActivity extends Activity implements CollectionViewCallbacks<String, Object> {
 
     public static final String TAG = "MainActivity";
 
