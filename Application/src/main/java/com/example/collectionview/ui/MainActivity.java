@@ -17,6 +17,9 @@
 
 package com.example.collectionview.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -45,6 +48,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
 
     private CollectionView mCollectionView;
     private CollectionView.Inventory inventory;
+    private CollectionView.InventoryGroup groupx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,10 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
         group1.addItem("Group one, item 1");
         group1.addItem("Group one, item 2");
         inventory.addGroup(group1);
+
+        groupx = new CollectionView.InventoryGroup(1);
+        groupx.setHeaderItem("Header x");
+        inventory.addGroup(groupx);
 
         CollectionView.InventoryGroup group2 = new CollectionView.InventoryGroup(10);
         group2.setHeaderItem("Header 2");
@@ -84,12 +92,11 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
 
 
     public void onButtonClicked(View view) {
-        CollectionView.InventoryGroup groupx = new CollectionView.InventoryGroup(1);
-        groupx.setHeaderItem("Header x");
-        groupx.addItem("Group x, item 1");
-        groupx.addItem("Group x, item 2");
-        groupx.addItem("Group x, item 3");
-        mCollectionView.addGroup(inventory, groupx);
+        List<Object> items = new ArrayList<>();
+        items.add("Group x, item 1");
+        items.add("Group x, item 2");
+        items.add("Group x, item 3");
+        mCollectionView.addItems(groupx, items);
     }
 
 

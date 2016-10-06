@@ -1,6 +1,7 @@
 package com.example.collectionview.widget;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -60,6 +61,15 @@ public class CollectionView extends RecyclerView {
         mAdapter.notifyItemRangeInserted(itemCountBeforeGroup, group.getRowCount());
     }
 
+    public void addItems(InventoryGroup grp, List<Object> items) {
+        InventoryGroup group = mInventory.findGroup(grp.mOrdinal);
+        int rowCountBeforeAddingItems = group.getRowCount();
+        int itemCountBeforeGroup = mInventory.getRowCountBeforeGroup(group);
+
+        group.addItems(items);
+
+        mAdapter.notifyItemRangeInserted(itemCountBeforeGroup + rowCountBeforeAddingItems, items.size());
+    }
 
 
     protected class MyListAdapter extends Adapter {
@@ -267,6 +277,10 @@ public class CollectionView extends RecyclerView {
             return mItems.get(index);
         }
 
+        public void addItems(List<Object> items) {
+            mItems.addAll(items);
+        }
+
     }
 
 
@@ -288,9 +302,14 @@ public class CollectionView extends RecyclerView {
         }
 
         public void addGroup(InventoryGroup group) {
-            if (group.mItems.size() > 0) {
+            if (group.mItems.size() >= 0) {
                 mGroups.put(group.mOrdinal, new InventoryGroup(group));
             }
+        }
+
+
+        public InventoryGroup findGroup(int groupOrdinal) {
+            return mGroups.get(groupOrdinal);
         }
 
 
@@ -318,7 +337,7 @@ public class CollectionView extends RecyclerView {
             return -1;
         }
 
-         int getRowCountBeforeGroup(InventoryGroup group) {
+        int getRowCountBeforeGroup(InventoryGroup group) {
             int count = 0;
             for (int i = 0; i < mGroups.size(); i++) {
                 if (group.mOrdinal == mGroups.keyAt(i)) {
