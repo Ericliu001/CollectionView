@@ -61,14 +61,25 @@ public class CollectionView extends RecyclerView {
         mAdapter.notifyItemRangeInserted(itemCountBeforeGroup, group.getRowCount());
     }
 
-    public void addItems(InventoryGroup grp, List<Object> items) {
-        InventoryGroup group = mInventory.findGroup(grp.mOrdinal);
+    public void addItemsInGroup(int groupOrdinal, List<Object> items) {
+        InventoryGroup group = mInventory.findGroup(groupOrdinal);
         int rowCountBeforeAddingItems = group.getRowCount();
         int itemCountBeforeGroup = mInventory.getRowCountBeforeGroup(group);
 
         group.addItems(items);
 
         mAdapter.notifyItemRangeInserted(itemCountBeforeGroup + rowCountBeforeAddingItems, items.size());
+    }
+
+
+    public void removeAllItemsInGroup(int groupOrdinal){
+        InventoryGroup group = mInventory.findGroup(groupOrdinal);
+        int itemCount = group.mItems.size();
+        int itemCountBeforeGroup = mInventory.getRowCountBeforeGroup(group);
+        group.mItems.clear();
+
+        mAdapter.notifyItemRangeRemoved(itemCountBeforeGroup + 1, itemCount);
+
     }
 
 
@@ -227,6 +238,7 @@ public class CollectionView extends RecyclerView {
      * Represents a group of items with a header to be displayed in the {@link CollectionView}.
      */
     public static class InventoryGroup {
+
         private int mOrdinal = 0;
 
 
@@ -247,6 +259,9 @@ public class CollectionView extends RecyclerView {
             mItems = (ArrayList<Object>) copyFrom.mItems.clone();
         }
 
+        public int getOrdinal() {
+            return mOrdinal;
+        }
 
         public Object getHeaderItem() {
             return mHeaderItem;

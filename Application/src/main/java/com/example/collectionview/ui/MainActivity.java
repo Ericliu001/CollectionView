@@ -49,6 +49,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
     private CollectionView mCollectionView;
     private CollectionView.Inventory inventory;
     private CollectionView.InventoryGroup groupx;
+    private boolean flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,11 +93,18 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
 
 
     public void onButtonClicked(View view) {
-        List<Object> items = new ArrayList<>();
-        items.add("Group x, item 1");
-        items.add("Group x, item 2");
-        items.add("Group x, item 3");
-        mCollectionView.addItems(groupx, items);
+
+        if (!flag) {
+            flag = true;
+            List<Object> items = new ArrayList<>();
+            items.add("Group x, item 1");
+            items.add("Group x, item 2");
+            items.add("Group x, item 3");
+            mCollectionView.addItemsInGroup(groupx.getOrdinal(), items);
+        } else {
+            mCollectionView.removeAllItemsInGroup(groupx.getOrdinal());
+            flag = false;
+        }
     }
 
 
