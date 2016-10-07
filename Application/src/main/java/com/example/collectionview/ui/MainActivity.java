@@ -61,30 +61,26 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
 
         inventory = new CollectionView.Inventory();
 
-        CollectionView.InventoryGroup group1 = new CollectionView.InventoryGroup(-2); // groupId is the smallest, displayed first
+        CollectionView.InventoryGroup group1 = inventory.newGroup(0); // groupId is the smallest, displayed first
         group1.setHeaderItem("Header 1");
         group1.addItem("Group one, item 1");
         group1.addItem("Group one, item 2");
-        inventory.addGroup(group1);
 
-        groupx = new CollectionView.InventoryGroup(1);
+        groupx = inventory.newGroup(1);
         groupx.setHeaderItem("Header x");
-        inventory.addGroup(groupx);
 
-        CollectionView.InventoryGroup group2 = new CollectionView.InventoryGroup(10);
+        CollectionView.InventoryGroup group2 = inventory.newGroup(2);
         group2.setHeaderItem("Header 2");
         group2.addItem("Group two, item 1");
         group2.addItem("Group two, item 2");
         group2.addItem("Group two, item 3");
-        inventory.addGroup(group2);
 
 
-        CollectionView.InventoryGroup group3 = new CollectionView.InventoryGroup(12); // 2 is smaller than 10, displayed second
+        CollectionView.InventoryGroup group3 = inventory.newGroup(3); // 2 is smaller than 10, displayed second
         group3.setHeaderItem("Header 3");
         group3.addItem("Group three, item 1");
         group3.addItem("Group three, item 2");
         group3.addItem("Group three, item 3");
-        inventory.addGroup(group3);
 
         mCollectionView.setCollectionAdapter(this);
         mCollectionView.updateInventory(inventory);

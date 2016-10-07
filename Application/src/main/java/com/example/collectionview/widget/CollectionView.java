@@ -53,8 +53,7 @@ public class CollectionView extends RecyclerView {
         mAdapter.notifyDataSetChanged();
     }
 
-    public void addGroup(Inventory inventory, InventoryGroup group) {
-        inventory.addGroup(group);
+    public void addGroup(InventoryGroup group) {
         mInventory.addGroup(group);
         int itemCountBeforeGroup = mInventory.getRowCountBeforeGroup(group);
 
@@ -72,7 +71,7 @@ public class CollectionView extends RecyclerView {
     }
 
 
-    public void removeAllItemsInGroup(int groupOrdinal){
+    public void removeAllItemsInGroup(int groupOrdinal) {
         InventoryGroup group = mInventory.findGroup(groupOrdinal);
         int itemCount = group.mItems.size();
         int itemCountBeforeGroup = mInventory.getRowCountBeforeGroup(group);
@@ -252,7 +251,7 @@ public class CollectionView extends RecyclerView {
         }
 
 
-        public InventoryGroup(InventoryGroup copyFrom) {
+        private InventoryGroup(InventoryGroup copyFrom) {
             mOrdinal = copyFrom.mOrdinal;
             mHeaderItem = copyFrom.mHeaderItem;
             mDataIndexStart = copyFrom.mDataIndexStart;
@@ -263,7 +262,7 @@ public class CollectionView extends RecyclerView {
             return mOrdinal;
         }
 
-        public Object getHeaderItem() {
+        Object getHeaderItem() {
             return mHeaderItem;
         }
 
@@ -283,16 +282,16 @@ public class CollectionView extends RecyclerView {
         }
 
 
-        public int getRowCount() {
+        int getRowCount() {
             return 1 + mItems.size();
         }
 
 
-        public Object getItem(int index) {
+        Object getItem(int index) {
             return mItems.get(index);
         }
 
-        public void addItems(List<Object> items) {
+        void addItems(List<Object> items) {
             mItems.addAll(items);
         }
 
@@ -316,10 +315,14 @@ public class CollectionView extends RecyclerView {
             mGroups = copyFrom.mGroups.clone();
         }
 
-        public void addGroup(InventoryGroup group) {
-            if (group.mItems.size() >= 0) {
-                mGroups.put(group.mOrdinal, new InventoryGroup(group));
-            }
+        private void addGroup(InventoryGroup group) {
+            mGroups.put(group.mOrdinal, group);
+        }
+
+        public InventoryGroup newGroup(int groupOrdinal) {
+            InventoryGroup group = new InventoryGroup(groupOrdinal);
+            addGroup(group);
+            return group;
         }
 
 
@@ -338,11 +341,11 @@ public class CollectionView extends RecyclerView {
             return total;
         }
 
-        public int getGroupCount() {
+        int getGroupCount() {
             return mGroups.size();
         }
 
-        public int getGroupIndex(int groupOrdinal) {
+        int getGroupIndex(int groupOrdinal) {
             for (int i = 0; i < mGroups.size(); i++) {
                 int key = mGroups.keyAt(i);
                 if (mGroups.get(key).mOrdinal == groupOrdinal) {
