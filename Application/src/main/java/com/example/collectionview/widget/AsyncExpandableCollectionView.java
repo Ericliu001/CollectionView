@@ -1,6 +1,7 @@
 package com.example.collectionview.widget;
 
 import java.util.List;
+import java.util.WeakHashMap;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -12,6 +13,8 @@ import android.util.AttributeSet;
 public class AsyncExpandableCollectionView extends CollectionView {
 
     private AsyncExpandableCollectionViewCallbacks mCallbacks;
+    private WeakHashMap<OnGroupStateChangeListener, Integer> mOnGroupStateChangeListeners = new WeakHashMap<>();
+    private int expandedGroupOrdinal = -1;
 
 
     public AsyncExpandableCollectionView(Context context) {
@@ -27,29 +30,72 @@ public class AsyncExpandableCollectionView extends CollectionView {
     }
 
 
+    public interface OnGroupStateChangeListener {
+
+        void onGroupStartExpending();
+
+        void onGroupExpanded();
+
+        void onGroupCollapsed();
+    }
+
+
+    public void onGroupClicked(int groupOrdinal, OnGroupStateChangeListener onGroupStateChangeListener) {
+        if (groupOrdinal != expandedGroupOrdinal) {
+            onStartExpandingGroup(groupOrdinal);
+        } else {
+            hideGroup(groupOrdinal);
+        }
+
+        mOnGroupStateChangeListeners.put(onGroupStateChangeListener, groupOrdinal);
+    }
+
+
     public void setCallbacks(AsyncExpandableCollectionViewCallbacks callbacks) {
         setCollectionCallbacks(callbacks);
         mCallbacks = callbacks;
     }
 
-    public void hideGroup(int groupOrdinal) {
+    private void hideGroup(int groupOrdinal) {
+        expandedGroupOrdinal = -1;
         removeAllItemsInGroup(groupOrdinal);
     }
 
 
-    public void onStartExpandingGroup(int groupOrdinal) {
+    private void onStartExpandingGroup(int groupOrdinal) {
         int ordinal = 0;
         for (int i = 0; i < mInventory.mGroups.size(); i++) {
             ordinal = mInventory.mGroups.keyAt(i);
             hideGroup(ordinal);
         }
 
-        mCallbacks.onStartExpandingGroup(groupOrdinal);
+        for (OnGroupStateChangeListener onGroupStateChangeListener : mOnGroupStateChangeListeners.keySet()) {
+            if (mOnGroupStateChangeListeners.get(onGroupStateChangeListener) != groupOrdinal) {
+                onGroupStateChangeListener.onGroupCollapsed();
+            }
+        }
+
+        expandedGroupOrdinal = groupOrdinal;
+        mCallbacks.onStartLoadingGroup(groupOrdinal);
+        for (OnGroupStateChangeListener onGroupStateChangeListener : mOnGroupStateChangeListeners.keySet()) {
+            if (mOnGroupStateChangeListeners.get(onGroupStateChangeListener) == groupOrdinal) {
+                onGroupStateChangeListener.onGroupStartExpending();
+            }
+        }
     }
 
 
-    public void onFinishExpandingGroup(int groupOrdinal, List<Object> items) {
-        addItemsInGroup(groupOrdinal, items);
+    public void onFinishLoadingGroup(List<Object> items) {
+        if (expandedGroupOrdinal < 0) {
+            return;
+        }
+
+        addItemsInGroup(expandedGroupOrdinal, items);
+        for (OnGroupStateChangeListener onGroupStateChangeListener : mOnGroupStateChangeListeners.keySet()) {
+            if (mOnGroupStateChangeListeners.get(onGroupStateChangeListener) == expandedGroupOrdinal) {
+                onGroupStateChangeListener.onGroupExpanded();
+            }
+        }
     }
 
 }

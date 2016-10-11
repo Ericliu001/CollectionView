@@ -6,7 +6,7 @@ package com.example.collectionview.widget;
 
 public interface AsyncExpandableCollectionViewCallbacks<T1, T2> extends CollectionViewCallbacks<T1, T2> {
 
-    void onStartExpandingGroup(int groupOrdinal);
+    void onStartLoadingGroup(int groupOrdinal);
 
 
 
