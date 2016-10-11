@@ -22,10 +22,14 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -61,7 +65,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
 
         inventory = new CollectionView.Inventory();
 
-        CollectionView.InventoryGroup group1 = inventory.newGroup(0); // groupId is the smallest, displayed first
+        CollectionView.InventoryGroup group1 = inventory.newGroup(0); // groupOrdinal is the smallest, displayed first
         group1.setHeaderItem("Header 1");
         group1.addItem("Group one, item 1");
         group1.addItem("Group one, item 2");
@@ -82,7 +86,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
         group3.addItem("Group three, item 2");
         group3.addItem("Group three, item 3");
 
-        mCollectionView.setCollectionAdapter(this);
+        mCollectionView.setCollectionCallbacks(this);
         mCollectionView.updateInventory(inventory);
 
     }
@@ -152,6 +156,26 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
         public TextView getTextView() {
             return textView;
         }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+         super.onCreateOptionsMenu(menu);
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.launch) {
+            Intent intent = new Intent(this, AsyncActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 

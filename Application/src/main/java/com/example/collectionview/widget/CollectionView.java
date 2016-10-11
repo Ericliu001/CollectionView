@@ -20,7 +20,7 @@ public class CollectionView extends RecyclerView {
     private static final int VIEWTYPE_HEADER = 0;
     private static final int VIEW_TYPE_NON_HEADER = 10;
 
-    private Inventory mInventory = new Inventory();
+    protected Inventory mInventory = new Inventory();
     private CollectionViewCallbacks mCallbacks = null;
     private MyListAdapter mAdapter = null;
 
@@ -44,7 +44,7 @@ public class CollectionView extends RecyclerView {
     }
 
 
-    public void setCollectionAdapter(CollectionViewCallbacks adapter) {
+    public void setCollectionCallbacks(CollectionViewCallbacks adapter) {
         mCallbacks = adapter;
     }
 
@@ -304,8 +304,8 @@ public class CollectionView extends RecyclerView {
      * header.
      */
     public static class Inventory {
-        private SparseArray<InventoryGroup> mGroups = new SparseArray<>();
-        ;
+        SparseArray<InventoryGroup> mGroups = new SparseArray<>();
+
 
         public Inventory() {
         }

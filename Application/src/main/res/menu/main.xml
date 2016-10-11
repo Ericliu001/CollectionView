@@ -15,7 +15,7 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_toggle_log"
+    <item android:id="@+id/launch"
           android:showAsAction="always"
-          android:title="@string/sample_show_log" />
+          android:title="Async" />
 </menu>
