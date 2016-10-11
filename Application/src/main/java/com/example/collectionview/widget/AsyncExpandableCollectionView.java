@@ -10,7 +10,7 @@ import android.util.AttributeSet;
  * Created by ericliu on 6/10/2016.
  */
 
-public class AsyncExpandableCollectionView extends CollectionView {
+public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2> {
 
     private AsyncExpandableCollectionViewCallbacks mCallbacks;
     private WeakHashMap<OnGroupStateChangeListener, Integer> mOnGroupStateChangeListeners = new WeakHashMap<>();
@@ -85,7 +85,7 @@ public class AsyncExpandableCollectionView extends CollectionView {
     }
 
 
-    public void onFinishLoadingGroup(List<Object> items) {
+    public void onFinishLoadingGroup(List<T2> items) {
         if (expandedGroupOrdinal < 0) {
             return;
         }

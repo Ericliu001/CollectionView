@@ -45,14 +45,14 @@ import com.example.collectionview.widget.CollectionViewCallbacks;
  * For devices with displays with a width of 720dp or greater, the sample log is always visible,
  * on other devices it's visibility is controlled by an item on the Action Bar.
  */
-public class MainActivity extends Activity implements CollectionViewCallbacks<String, Object> {
+public class MainActivity extends Activity implements CollectionViewCallbacks<String, String> {
 
     public static final String TAG = "MainActivity";
 
 
-    private CollectionView mCollectionView;
-    private CollectionView.Inventory inventory;
-    private CollectionView.InventoryGroup groupx;
+    private CollectionView<String, String> mCollectionView;
+    private CollectionView.Inventory<String, String> inventory;
+    private CollectionView.InventoryGroup<String, String> groupx;
     private boolean flag;
 
     @Override
@@ -96,7 +96,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
 
         if (!flag) {
             flag = true;
-            List<Object> items = new ArrayList<>();
+            List<String> items = new ArrayList<>();
             items.add("Group x, item 1");
             items.add("Group x, item 2");
             items.add("Group x, item 3");
@@ -132,7 +132,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
     }
 
     @Override
-    public void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, Object item) {
+    public void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, String item) {
         ((MyViewHolder) holder).getTextView().setText((String) item);
     }
 

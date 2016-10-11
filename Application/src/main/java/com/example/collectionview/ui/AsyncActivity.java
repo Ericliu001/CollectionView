@@ -17,7 +17,7 @@ import com.example.collectionview.widget.AsyncExpandableCollectionView;
 import com.example.collectionview.widget.AsyncExpandableCollectionViewCallbacks;
 import com.example.collectionview.widget.CollectionView;
 
-public class AsyncActivity extends MainActivity  implements AsyncExpandableCollectionViewCallbacks<String, Object>{
+public class AsyncActivity extends MainActivity  implements AsyncExpandableCollectionViewCallbacks<String, String>{
 
     private AsyncExpandableCollectionView mAsyncExpandableCollectionView;
     private CollectionView.Inventory inventory;
