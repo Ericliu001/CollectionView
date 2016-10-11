@@ -99,7 +99,7 @@ public class CollectionView extends RecyclerView {
             RowInformation rowInfo = computeRowContent(position);
             if (rowInfo.isComputedSuccessful) {
                 if (rowInfo.isHeader) {
-                    return VIEWTYPE_HEADER;
+                    return VIEWTYPE_HEADER - mInventory.mGroups.indexOfKey(rowInfo.groupOrdinal);
                 } else {
                     return VIEW_TYPE_NON_HEADER + mInventory.mGroups.indexOfKey(rowInfo.groupOrdinal);
                 }
@@ -137,7 +137,7 @@ public class CollectionView extends RecyclerView {
         }
 
         if (rowInfo.isHeader) {
-            mCallbacks.bindCollectionHeaderView(getContext(), holder, rowInfo.group.getHeaderItem());
+            mCallbacks.bindCollectionHeaderView(getContext(), holder, rowInfo.groupOrdinal, rowInfo.group.getHeaderItem());
         } else {
             Object item = rowInfo.group.getItem(rowInfo.positionInGroup);
             mCallbacks.bindCollectionItemView(getContext(), holder, rowInfo.groupOrdinal, item);
@@ -159,9 +159,13 @@ public class CollectionView extends RecyclerView {
 
 
         ViewHolder holder;
-        if (viewType == VIEWTYPE_HEADER) {
+        if (viewType <= VIEWTYPE_HEADER) {
+            int groupIndex = VIEWTYPE_HEADER - viewType;
+            int key = mInventory.mGroups.keyAt(groupIndex);
+            int groupOrdinal = mInventory.mGroups.get(key).mOrdinal;
+
             // return header ViewHolder
-            holder = mCallbacks.newCollectionHeaderView(getContext(), parent);
+            holder = mCallbacks.newCollectionHeaderView(getContext(), groupOrdinal, parent);
         } else {
             int groupIndex = viewType - VIEW_TYPE_NON_HEADER;
             int key = mInventory.mGroups.keyAt(groupIndex);

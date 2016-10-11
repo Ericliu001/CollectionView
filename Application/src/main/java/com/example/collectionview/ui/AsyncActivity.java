@@ -29,7 +29,7 @@ public class AsyncActivity extends MainActivity  implements AsyncExpandableColle
 
 
     @Override
-    public RecyclerView.ViewHolder newCollectionHeaderView(Context context, ViewGroup parent) {
+    public RecyclerView.ViewHolder newCollectionHeaderView(Context context, int groupOrdinal, ViewGroup parent) {
         // Create a new view.
         View v = LayoutInflater.from(context)
                 .inflate(R.layout.header_row_item, parent, false);
@@ -39,8 +39,8 @@ public class AsyncActivity extends MainActivity  implements AsyncExpandableColle
 
 
     @Override
-    public void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, String headerItem) {
-        super.bindCollectionHeaderView(context, holder, headerItem);
+    public void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, String headerItem) {
+        super.bindCollectionHeaderView(context, holder, groupOrdinal, headerItem);
 
     }
 

@@ -29,7 +29,7 @@ public interface CollectionViewCallbacks<T1, T2> {
     /**
      * Returns a new custom View that will be used for each of the collection group headers.
      */
-    RecyclerView.ViewHolder newCollectionHeaderView(Context context, ViewGroup parent);
+    RecyclerView.ViewHolder newCollectionHeaderView(Context context, int groupOrdinal, ViewGroup parent);
 
 
     /**
@@ -45,7 +45,7 @@ public interface CollectionViewCallbacks<T1, T2> {
     /**
      * Binds the given data (like the header label) with the given collection group header View.
      */
-    void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, T1 headerItem);
+    void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, T1 headerItem);
 
     /**
      * Binds the given data with the given collection item View.
