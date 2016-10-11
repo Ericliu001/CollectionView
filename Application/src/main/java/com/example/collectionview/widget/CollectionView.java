@@ -15,13 +15,13 @@ import android.view.ViewGroup;
 /**
  * Created by Eric Liu on 18/01/2016.
  */
-public class CollectionView extends RecyclerView {
+public class CollectionView<T1, T2> extends RecyclerView {
     private static final String TAG = CollectionView.class.getSimpleName();
     private static final int VIEWTYPE_HEADER = 0;
     private static final int VIEW_TYPE_NON_HEADER = 10;
 
-    protected Inventory mInventory = new Inventory();
-    private CollectionViewCallbacks mCallbacks = null;
+    protected Inventory<T1, T2> mInventory = new Inventory();
+    private CollectionViewCallbacks<T1, T2> mCallbacks = null;
     private MyListAdapter mAdapter = null;
 
 
@@ -44,24 +44,24 @@ public class CollectionView extends RecyclerView {
     }
 
 
-    public void setCollectionCallbacks(CollectionViewCallbacks adapter) {
+    public void setCollectionCallbacks(CollectionViewCallbacks<T1,T2> adapter) {
         mCallbacks = adapter;
     }
 
-    public void updateInventory(final Inventory inventory) {
-        mInventory = new Inventory(inventory);
+    public void updateInventory(final Inventory<T1, T2> inventory) {
+        mInventory = new Inventory<T1, T2>(inventory);
         mAdapter.notifyDataSetChanged();
     }
 
-    public void addGroup(InventoryGroup group) {
+    public void addGroup(InventoryGroup<T1, T2> group) {
         mInventory.addGroup(group);
         int itemCountBeforeGroup = mInventory.getRowCountBeforeGroup(group);
 
         mAdapter.notifyItemRangeInserted(itemCountBeforeGroup, group.getRowCount());
     }
 
-    public void addItemsInGroup(int groupOrdinal, List<Object> items) {
-        InventoryGroup group = mInventory.findGroup(groupOrdinal);
+    public void addItemsInGroup(int groupOrdinal, List<T2> items) {
+        InventoryGroup<T1, T2> group = mInventory.findGroup(groupOrdinal);
         int rowCountBeforeAddingItems = group.getRowCount();
         int itemCountBeforeGroup = mInventory.getRowCountBeforeGroup(group);
 
@@ -72,7 +72,7 @@ public class CollectionView extends RecyclerView {
 
 
     public void removeAllItemsInGroup(int groupOrdinal) {
-        InventoryGroup group = mInventory.findGroup(groupOrdinal);
+        InventoryGroup<T1, T2> group = mInventory.findGroup(groupOrdinal);
         int itemCount = group.mItems.size();
         int itemCountBeforeGroup = mInventory.getRowCountBeforeGroup(group);
         group.mItems.clear();
@@ -96,7 +96,7 @@ public class CollectionView extends RecyclerView {
 
         @Override
         public int getItemViewType(int position) {
-            RowInformation rowInfo = computeRowContent(position);
+            RowInformation<T1, T2> rowInfo = computeRowContent(position);
             if (rowInfo.isComputedSuccessful) {
                 if (rowInfo.isHeader) {
                     return VIEWTYPE_HEADER - mInventory.mGroups.indexOfKey(rowInfo.groupOrdinal);
@@ -131,7 +131,7 @@ public class CollectionView extends RecyclerView {
             return;
         }
 
-        RowInformation rowInfo = computeRowContent(position);
+        RowInformation<T1, T2> rowInfo = computeRowContent(position);
         if (!rowInfo.isComputedSuccessful) {
             return;
         }
@@ -139,7 +139,7 @@ public class CollectionView extends RecyclerView {
         if (rowInfo.isHeader) {
             mCallbacks.bindCollectionHeaderView(getContext(), holder, rowInfo.groupOrdinal, rowInfo.group.getHeaderItem());
         } else {
-            Object item = rowInfo.group.getItem(rowInfo.positionInGroup);
+            T2 item = rowInfo.group.getItem(rowInfo.positionInGroup);
             mCallbacks.bindCollectionItemView(getContext(), holder, rowInfo.groupOrdinal, item);
         }
 
@@ -183,25 +183,25 @@ public class CollectionView extends RecyclerView {
     }
 
 
-    private static class RowInformation {
+    private static class RowInformation<T1, T2> {
         boolean isComputedSuccessful = false;
         int row;
         boolean isHeader;
         int groupOrdinal;
-        InventoryGroup group;
+        InventoryGroup<T1, T2> group;
         int positionInGroup;
     }
 
 
-    private RowInformation computeRowContent(int row) {
-        RowInformation result = new RowInformation();
+    private RowInformation<T1, T2> computeRowContent(int row) {
+        RowInformation<T1, T2> result = new RowInformation<T1, T2>();
         int rowCounter = 0;
         int positionInGroup;
 
 
         for (int i = 0; i < mInventory.mGroups.size(); i++) {
             int key = mInventory.mGroups.keyAt(i);
-            InventoryGroup group = mInventory.mGroups.get(key);
+            InventoryGroup<T1, T2> group = mInventory.mGroups.get(key);
             if (rowCounter == row) {
                 // row is a group header
                 result.isComputedSuccessful = true;
@@ -240,48 +240,48 @@ public class CollectionView extends RecyclerView {
     /**
      * Represents a group of items with a header to be displayed in the {@link CollectionView}.
      */
-    public static class InventoryGroup {
+    public static class InventoryGroup<T1, T2> {
 
         private int mOrdinal = 0;
 
 
-        private Object mHeaderItem;
+        private T1 mHeaderItem;
         private int mDataIndexStart = 0;
 
-        private ArrayList<Object> mItems = new ArrayList<>();
+        private ArrayList<T2> mItems = new ArrayList<>();
 
         public InventoryGroup(int oridinal) {
             mOrdinal = oridinal;
         }
 
 
-        private InventoryGroup(InventoryGroup copyFrom) {
+        private InventoryGroup(InventoryGroup<T1, T2> copyFrom) {
             mOrdinal = copyFrom.mOrdinal;
             mHeaderItem = copyFrom.mHeaderItem;
             mDataIndexStart = copyFrom.mDataIndexStart;
-            mItems = (ArrayList<Object>) copyFrom.mItems.clone();
+            mItems = (ArrayList<T2>) copyFrom.mItems.clone();
         }
 
         public int getOrdinal() {
             return mOrdinal;
         }
 
-        Object getHeaderItem() {
+        T1 getHeaderItem() {
             return mHeaderItem;
         }
 
-        public InventoryGroup setHeaderItem(Object headerItem) {
+        public InventoryGroup setHeaderItem(T1 headerItem) {
             mHeaderItem = headerItem;
             return this;
         }
 
-        public InventoryGroup setDataIndexStart(int dataIndexStart) {
+        public InventoryGroup<T1, T2> setDataIndexStart(int dataIndexStart) {
             mDataIndexStart = dataIndexStart;
             return this;
         }
 
 
-        public void addItem(Object item) {
+        public void addItem(T2 item) {
             mItems.add(item);
         }
 
@@ -291,11 +291,11 @@ public class CollectionView extends RecyclerView {
         }
 
 
-        Object getItem(int index) {
+        T2 getItem(int index) {
             return mItems.get(index);
         }
 
-        void addItems(List<Object> items) {
+        void addItems(List<T2> items) {
             mItems.addAll(items);
         }
 
@@ -307,8 +307,8 @@ public class CollectionView extends RecyclerView {
      * This is defined as a list of {@link InventoryGroup} which represents a group of items with a
      * header.
      */
-    public static class Inventory {
-        SparseArray<InventoryGroup> mGroups = new SparseArray<>();
+    public static class Inventory<T1, T2> {
+        SparseArray<InventoryGroup<T1, T2>> mGroups = new SparseArray<>();
 
 
         public Inventory() {
@@ -319,7 +319,7 @@ public class CollectionView extends RecyclerView {
             mGroups = copyFrom.mGroups.clone();
         }
 
-        private void addGroup(InventoryGroup group) {
+        private void addGroup(InventoryGroup<T1, T2> group) {
             mGroups.put(group.mOrdinal, group);
         }
 
@@ -330,7 +330,7 @@ public class CollectionView extends RecyclerView {
         }
 
 
-        public InventoryGroup findGroup(int groupOrdinal) {
+        private InventoryGroup findGroup(int groupOrdinal) {
             return mGroups.get(groupOrdinal);
         }
 
