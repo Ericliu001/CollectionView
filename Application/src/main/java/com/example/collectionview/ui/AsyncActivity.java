@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.recyclerview.R;
-import com.example.collectionview.widget.AsyncExpandableCollectionView;
-import com.example.collectionview.widget.AsyncExpandableCollectionViewCallbacks;
+import com.example.collectionview.widget.async.AsyncExpandableCollectionView;
+import com.example.collectionview.widget.async.AsyncExpandableCollectionViewCallbacks;
 import com.example.collectionview.widget.CollectionView;
 
 public class AsyncActivity extends MainActivity  implements AsyncExpandableCollectionViewCallbacks<String, String>{

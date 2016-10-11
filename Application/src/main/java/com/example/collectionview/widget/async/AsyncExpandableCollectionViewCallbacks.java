@@ -1,4 +1,6 @@
-package com.example.collectionview.widget;
+package com.example.collectionview.widget.async;
+
+import com.example.collectionview.widget.CollectionViewCallbacks;
 
 /**
  * Created by ericliu on 11/10/16.

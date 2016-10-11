@@ -308,7 +308,7 @@ public class CollectionView<T1, T2> extends RecyclerView {
      * header.
      */
     public static class Inventory<T1, T2> {
-        SparseArray<InventoryGroup<T1, T2>> mGroups = new SparseArray<>();
+        private SparseArray<InventoryGroup<T1, T2>> mGroups = new SparseArray<>();
 
 
         public Inventory() {
@@ -371,6 +371,8 @@ public class CollectionView<T1, T2> extends RecyclerView {
             return count;
         }
 
-
+        public SparseArray<InventoryGroup<T1, T2>> getGroups() {
+            return mGroups;
+        }
     }
 }

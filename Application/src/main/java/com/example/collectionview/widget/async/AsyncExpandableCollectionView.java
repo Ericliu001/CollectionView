@@ -1,4 +1,4 @@
-package com.example.collectionview.widget;
+package com.example.collectionview.widget.async;
 
 import java.util.List;
 import java.util.WeakHashMap;
@@ -6,13 +6,15 @@ import java.util.WeakHashMap;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import com.example.collectionview.widget.CollectionView;
+
 /**
  * Created by ericliu on 6/10/2016.
  */
 
 public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2> {
 
-    private AsyncExpandableCollectionViewCallbacks mCallbacks;
+    private AsyncExpandableCollectionViewCallbacks<T1, T2> mCallbacks;
     private WeakHashMap<OnGroupStateChangeListener, Integer> mOnGroupStateChangeListeners = new WeakHashMap<>();
     private int expandedGroupOrdinal = -1;
 
@@ -51,7 +53,7 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
     }
 
 
-    public void setCallbacks(AsyncExpandableCollectionViewCallbacks callbacks) {
+    public void setCallbacks(AsyncExpandableCollectionViewCallbacks<T1, T2> callbacks) {
         setCollectionCallbacks(callbacks);
         mCallbacks = callbacks;
     }
@@ -64,8 +66,8 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
 
     private void onStartExpandingGroup(int groupOrdinal) {
         int ordinal = 0;
-        for (int i = 0; i < mInventory.mGroups.size(); i++) {
-            ordinal = mInventory.mGroups.keyAt(i);
+        for (int i = 0; i < mInventory.getGroups().size(); i++) {
+            ordinal = mInventory.getGroups().keyAt(i);
             hideGroup(ordinal);
         }
 

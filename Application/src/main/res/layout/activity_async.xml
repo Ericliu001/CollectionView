@@ -12,7 +12,7 @@
     tools:context="com.example.collectionview.ui.AsyncActivity">
 
 
-    <com.example.collectionview.widget.AsyncExpandableCollectionView
+    <com.example.collectionview.widget.async.AsyncExpandableCollectionView
         android:id="@+id/asyncExpandableCollectionView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
