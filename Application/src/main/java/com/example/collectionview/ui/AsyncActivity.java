@@ -16,6 +16,7 @@ import com.example.collectionview.widget.async.AsyncExpandableCollectionView;
 import com.example.collectionview.widget.async.AsyncExpandableCollectionViewCallbacks;
 import com.example.collectionview.widget.async.AsyncHeaderViewHolder;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class AsyncActivity extends MainActivity implements AsyncExpandableCollec
 
     private AsyncExpandableCollectionView<String, News> mAsyncExpandableCollectionView;
     private CollectionView.Inventory<String, News> inventory;
+    private OnLoadDataListener onLoadDataListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,35 +60,63 @@ public class AsyncActivity extends MainActivity implements AsyncExpandableCollec
 
     @Override
     public void onStartLoadingGroup(int groupOrdinal) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                List<News> items = new ArrayList<>();
-                News news = new News();
-                news.setNewsTitle("Lawyers meet voluntary pro bono target for first time since 2013");
-                news.setNewsBody("A voluntary target for the amount of pro bono work done by Australian lawyers has been met for the first time since 2013. Key points: The Australian Pro Bono Centre's asks lawyers to do 35 hours of free community work a year; Pro bono services can help ...\n");
-                items.add(news);
-
-                news = new News();
-                news.setNewsTitle("HSC 2016: 77000 students to sit first exams across NSW");
-                news.setNewsBody("More than 77,000 NSW high school students will sit their first HSC exams this week as one of the final cohorts to sit the test before the NSW government enacts sweeping reforms across the state.");
-                items.add(news);
-                mAsyncExpandableCollectionView.onFinishLoadingGroup(items);
-            }
-        }.execute();
+        onLoadDataListener = new OnLoadDataListener(groupOrdinal);
+        new LoadDataTask(onLoadDataListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    final class OnLoadDataListener {
+        private int mGroupOrdinal;
+
+        public OnLoadDataListener(int groupOrdinal) {
+
+            mGroupOrdinal = groupOrdinal;
+        }
+
+        public void onFinishLoadingGroup(List<News> items) {
+            mAsyncExpandableCollectionView.onFinishLoadingGroup(mGroupOrdinal,items);
+        }
+
+    }
+
+
+    private static class LoadDataTask extends AsyncTask<Void, Void, Void> {
+
+        private WeakReference<AsyncActivity.OnLoadDataListener> mOnLoadDataListenerRef = null;
+
+        public LoadDataTask(AsyncActivity.OnLoadDataListener onLoadDataListener) {
+            mOnLoadDataListenerRef = new WeakReference<>(onLoadDataListener);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            List<News> items = new ArrayList<>();
+            News news = new News();
+            news.setNewsTitle("Lawyers meet voluntary pro bono target for first time since 2013");
+            news.setNewsBody("A voluntary target for the amount of pro bono work done by Australian lawyers has been met for the first time since 2013. Key points: The Australian Pro Bono Centre's asks lawyers to do 35 hours of free community work a year; Pro bono services can help ...\n");
+            items.add(news);
+
+            news = new News();
+            news.setNewsTitle("HSC 2016: 77000 students to sit first exams across NSW");
+            news.setNewsBody("More than 77,000 NSW high school students will sit their first HSC exams this week as one of the final cohorts to sit the test before the NSW government enacts sweeping reforms across the state.");
+            items.add(news);
+
+            if (mOnLoadDataListenerRef.get() != null) {
+                mOnLoadDataListenerRef.get().onFinishLoadingGroup(items);
+            }
+        }
+
+    }
 
     @Override
     public RecyclerView.ViewHolder newCollectionHeaderView(Context context, int groupOrdinal, ViewGroup parent) {

@@ -19,7 +19,6 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
     private AsyncExpandableCollectionViewCallbacks<T1, T2> mCallbacks;
     private WeakHashMap<OnGroupStateChangeListener, Integer> mOnGroupStateChangeListeners = new WeakHashMap<>();
     private int expandedGroupOrdinal = -1;
-    private boolean isLoading;
 
 
     public AsyncExpandableCollectionView(Context context) {
@@ -56,11 +55,6 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
 
 
     public void onGroupClicked(int groupOrdinal) {
-        if (isLoading) {
-            // ignore the click event when one group is loading items.
-            return;
-        }
-
         if (groupOrdinal != expandedGroupOrdinal) {
             onStartExpandingGroup(groupOrdinal);
         } else {
@@ -76,7 +70,6 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
     }
 
     private void collapseGroup(int groupOrdinal) {
-        isLoading = false;
         expandedGroupOrdinal = -1;
         removeAllItemsInGroup(groupOrdinal);
         for (OnGroupStateChangeListener onGroupStateChangeListener : mOnGroupStateChangeListeners.keySet()) {
@@ -96,8 +89,6 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
             }
         }
 
-
-        isLoading = true;
         expandedGroupOrdinal = groupOrdinal;
         mCallbacks.onStartLoadingGroup(groupOrdinal);
         for (OnGroupStateChangeListener onGroupStateChangeListener : mOnGroupStateChangeListeners.keySet()) {
@@ -108,9 +99,8 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
     }
 
 
-    public void onFinishLoadingGroup(List<? extends T2> items) {
-        isLoading = false;
-        if (expandedGroupOrdinal < 0) {
+    public void onFinishLoadingGroup(int groupOrdinal, List<T2> items) {
+        if (expandedGroupOrdinal < 0 || groupOrdinal != expandedGroupOrdinal) {
             return;
         }
 
