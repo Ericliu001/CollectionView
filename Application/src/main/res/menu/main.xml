@@ -17,5 +17,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/launch"
           android:showAsAction="always"
-          android:title="Async" />
+          android:title="Async_Expandable" />
 </menu>
