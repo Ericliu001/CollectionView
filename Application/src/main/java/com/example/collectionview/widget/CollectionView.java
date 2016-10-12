@@ -1,8 +1,5 @@
 package com.example.collectionview.widget;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +8,9 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Eric Liu on 18/01/2016.
@@ -342,8 +342,8 @@ public class CollectionView<T1, T2> extends RecyclerView {
             mGroups.put(group.mOrdinal, group);
         }
 
-        public InventoryGroup newGroup(int groupOrdinal) {
-            InventoryGroup group = new InventoryGroup(groupOrdinal);
+        public InventoryGroup<T1, T2> newGroup(int groupOrdinal) {
+            InventoryGroup<T1, T2> group = new InventoryGroup(groupOrdinal);
             addGroup(group);
             return group;
         }

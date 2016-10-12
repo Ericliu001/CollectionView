@@ -1,8 +1,6 @@
 package com.example.collectionview.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,12 +11,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.recyclerview.R;
+import com.example.collectionview.widget.CollectionView;
 import com.example.collectionview.widget.async.AsyncExpandableCollectionView;
 import com.example.collectionview.widget.async.AsyncExpandableCollectionViewCallbacks;
-import com.example.collectionview.widget.CollectionView;
 import com.example.collectionview.widget.async.AsyncHeaderViewHolder;
 
-public class AsyncActivity extends MainActivity implements AsyncExpandableCollectionViewCallbacks<String, String> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class AsyncActivity extends Activity implements AsyncExpandableCollectionViewCallbacks<String, String> {
 
     private AsyncExpandableCollectionView mAsyncExpandableCollectionView;
     private CollectionView.Inventory inventory;
@@ -81,10 +82,24 @@ public class AsyncActivity extends MainActivity implements AsyncExpandableCollec
         return new MyHeaderViewHolder(v, groupOrdinal, mAsyncExpandableCollectionView);
     }
 
+    @Override
+    public RecyclerView.ViewHolder newCollectionItemView(Context context, int groupOrdinal, ViewGroup parent) {
+        // Create a new view.
+        View v = LayoutInflater.from(context)
+                .inflate(R.layout.header_row_item, parent, false);
+
+        return new MyHeaderViewHolder(v, groupOrdinal, mAsyncExpandableCollectionView);
+    }
+
 
     @Override
     public void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, String headerItem) {
         ((MyHeaderViewHolder) holder).getTextView().setText((String) headerItem);
+
+    }
+
+    @Override
+    public void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, String item) {
 
     }
 
@@ -94,7 +109,7 @@ public class AsyncActivity extends MainActivity implements AsyncExpandableCollec
 
         public MyHeaderViewHolder(View v, int groupOrdinal, AsyncExpandableCollectionView asyncExpandableCollectionView) {
             super(v, groupOrdinal, asyncExpandableCollectionView);
-            textView = (TextView) v.findViewById(R.id.textView);
+            textView = (TextView) v.findViewById(android.R.id.title);
         }
 
 

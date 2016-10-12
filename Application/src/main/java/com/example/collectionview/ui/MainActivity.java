@@ -17,9 +17,6 @@
 
 package com.example.collectionview.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -45,14 +42,13 @@ import com.example.collectionview.widget.CollectionViewCallbacks;
  * For devices with displays with a width of 720dp or greater, the sample log is always visible,
  * on other devices it's visibility is controlled by an item on the Action Bar.
  */
-public class MainActivity extends Activity implements CollectionViewCallbacks<String, String> {
+public class MainActivity extends Activity implements CollectionViewCallbacks<String, News> {
 
     public static final String TAG = "MainActivity";
 
 
-    private CollectionView<String, String> mCollectionView;
-    private CollectionView.Inventory<String, String> inventory;
-    private CollectionView.InventoryGroup<String, String> groupx;
+    private CollectionView<String, News> mCollectionView;
+    private CollectionView.Inventory<String, News> inventory;
     private boolean flag;
 
     @Override
@@ -65,46 +61,62 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
 
         inventory = new CollectionView.Inventory();
 
-        CollectionView.InventoryGroup group1 = inventory.newGroup(0); // groupOrdinal is the smallest, displayed first
-        group1.setHeaderItem("Header 1");
-        group1.addItem("Group one, item 1");
-        group1.addItem("Group one, item 2");
+        CollectionView.InventoryGroup<String, News> group1 = inventory.newGroup(0); // groupOrdinal is the smallest, displayed first
+        News news;
 
-        groupx = inventory.newGroup(1);
-        groupx.setHeaderItem("Header x");
+        group1.setHeaderItem("Top Stories");
+        news = new News();
+        news.setNewsTitle("Australian Police Arrest 2 Sydney Teens, Seize Knives");
+        news.setNewsBody("SYDNEY - Australian police arrested two teenagers and seized knives in Sydney on Wednesday as the country marked the 14th anniversary of extremist bombings in Indonesia that killed 202, including 88 Australians, police said.");
+        group1.addItem(news);
 
-        CollectionView.InventoryGroup group2 = inventory.newGroup(2);
-        group2.setHeaderItem("Header 2");
-        group2.addItem("Group two, item 1");
-        group2.addItem("Group two, item 2");
-        group2.addItem("Group two, item 3");
+        news = new News();
+        news.setNewsTitle("Queensland report outlines 50 per cent renewable energy map");
+        news.setNewsBody("The security of Queensland's power supply won't be undermined by a government target of 50 per cent renewable energy by 2030, Energy Minister Mark Bailey says.");
+        group1.addItem(news);
+
+        news = new News();
+        news.setNewsTitle("VB and sheep farms, Lee brings the laughs");
+        news.setNewsBody("VB beer, barbecues and sheep farms - they're not the kind of things you expect to hear from a visiting leader in a formal speech to federal parliament.");
+        group1.addItem(news);
+
+        CollectionView.InventoryGroup<String, News> group2 = inventory.newGroup(2);
+        group2.setHeaderItem("World");
+
+        news = new News();
+        news.setNewsTitle("'Sanctions brought nothing': German politicians call for rapprochement with Russia");
+        news.setNewsBody("The current policy of “saber rattling” should not continue, Erwin Sellering, the prime minister of the German state of Mecklenburg-Western Pomerania, told Germany's weekly Welt am Sonntag newspaper, as he called for lifting anti-Russian sanctions.");
+        group2.addItem(news);
+
+        news = new News();
+        news.setNewsTitle("Thai prince to visit ailing king, hospital says as health fears grow");
+        news.setNewsBody("Thai King Bhumibol Adulyadej attends a parade to mark his 81st birthday in Bangkok, Thailand, 02 December 2008. (AAP ). Previous Next Show Grid.");
+        group2.addItem(news);
 
 
-        CollectionView.InventoryGroup group3 = inventory.newGroup(3); // 2 is smaller than 10, displayed second
-        group3.setHeaderItem("Header 3");
-        group3.addItem("Group three, item 1");
-        group3.addItem("Group three, item 2");
-        group3.addItem("Group three, item 3");
+
+        CollectionView.InventoryGroup<String, News> group3 = inventory.newGroup(3); // 2 is smaller than 10, displayed second
+        group3.setHeaderItem("Australia");
+
+        news = new News();
+        news.setNewsTitle("'I beg you, do not just put it in the filing cabinet', witness pleads at NT Royal Commission");
+        news.setNewsBody("The survival of Indigenous people in the Northern Territory depended on the outcome of the Royal Commission into Child Protection and Detention, a witness told the commission hearing in Darwin.");
+        group3.addItem(news);
+
+        news = new News();
+        news.setNewsTitle("HSC 2016: 77000 students to sit first exams across NSW");
+        news.setNewsBody("More than 77,000 NSW high school students will sit their first HSC exams this week as one of the final cohorts to sit the test before the NSW government enacts sweeping reforms across the state.");
+        group3.addItem(news);
+
+
+        news = new News();
+        news.setNewsTitle("Lawyers meet voluntary pro bono target for first time since 2013");
+        news.setNewsBody("A voluntary target for the amount of pro bono work done by Australian lawyers has been met for the first time since 2013. Key points: The Australian Pro Bono Centre's asks lawyers to do 35 hours of free community work a year; Pro bono services can help ...\n");
+        group3.addItem(news);
 
         mCollectionView.setCollectionCallbacks(this);
         mCollectionView.updateInventory(inventory);
 
-    }
-
-
-    public void onButtonClicked(View view) {
-
-        if (!flag) {
-            flag = true;
-            List<String> items = new ArrayList<>();
-            items.add("Group x, item 1");
-            items.add("Group x, item 2");
-            items.add("Group x, item 3");
-            mCollectionView.addItemsInGroup(groupx.getOrdinal(), items);
-        } else {
-            mCollectionView.removeAllItemsInGroup(groupx.getOrdinal());
-            flag = false;
-        }
     }
 
 
@@ -114,7 +126,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
         View v = LayoutInflater.from(context)
                 .inflate(R.layout.header_row_item, parent, false);
 
-        return new MyViewHolder(v);
+        return new TitleHolder(v);
     }
 
     @Override
@@ -123,25 +135,43 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
         View v = LayoutInflater.from(context)
                 .inflate(R.layout.text_row_item, parent, false);
 
-        return new MyViewHolder(v);
+        return new NewsItemHolder(v);
     }
 
     @Override
     public void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, String headerItem) {
-        ((MyViewHolder) holder).getTextView().setText((String) headerItem);
+        ((TitleHolder) holder).getTextView().setText((String) headerItem);
     }
 
     @Override
-    public void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, String item) {
-        ((MyViewHolder) holder).getTextView().setText((String) item);
+    public void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, News item) {
+        NewsItemHolder newsItemHolder = (NewsItemHolder) holder;
+        newsItemHolder.getTextViewTitle().setText(item.getNewsTitle());
+        newsItemHolder.getTextViewDescrption().setText(item.getNewsBody());
     }
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class TitleHolder extends RecyclerView.ViewHolder {
 
         private final TextView textView;
 
-        public MyViewHolder(View v) {
+        public TitleHolder(View itemView) {
+            super(itemView);
+            textView = (TextView) itemView.findViewById(R.id.title);
+        }
+
+        public TextView getTextView() {
+            return textView;
+        }
+    }
+
+    public static class NewsItemHolder extends RecyclerView.ViewHolder {
+
+
+        private final TextView tvTitle;
+        private final TextView tvDescription;
+
+        public NewsItemHolder(View v) {
             super(v);
             // Define click listener for the ViewHolder's View.
             v.setOnClickListener(new View.OnClickListener() {
@@ -150,18 +180,23 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
                     Log.d(TAG, "Element " + getPosition() + " clicked.");
                 }
             });
-            textView = (TextView) v.findViewById(R.id.textView);
+            tvTitle = (TextView) v.findViewById(R.id.title);
+            tvDescription = (TextView) v.findViewById(R.id.description);
         }
 
-        public TextView getTextView() {
-            return textView;
+        public TextView getTextViewTitle() {
+            return tvTitle;
+        }
+
+        public TextView getTextViewDescrption() {
+            return tvDescription;
         }
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-         super.onCreateOptionsMenu(menu);
+        super.onCreateOptionsMenu(menu);
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
