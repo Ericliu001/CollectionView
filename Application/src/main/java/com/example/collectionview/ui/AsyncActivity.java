@@ -16,8 +16,9 @@ import com.example.android.recyclerview.R;
 import com.example.collectionview.widget.async.AsyncExpandableCollectionView;
 import com.example.collectionview.widget.async.AsyncExpandableCollectionViewCallbacks;
 import com.example.collectionview.widget.CollectionView;
+import com.example.collectionview.widget.async.AsyncHeaderViewHolder;
 
-public class AsyncActivity extends MainActivity  implements AsyncExpandableCollectionViewCallbacks<String, String>{
+public class AsyncActivity extends MainActivity implements AsyncExpandableCollectionViewCallbacks<String, String> {
 
     private AsyncExpandableCollectionView mAsyncExpandableCollectionView;
     private CollectionView.Inventory inventory;
@@ -87,30 +88,18 @@ public class AsyncActivity extends MainActivity  implements AsyncExpandableColle
 
     }
 
-    public static class MyHeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, AsyncExpandableCollectionView.OnGroupStateChangeListener {
+    public static class MyHeaderViewHolder extends AsyncHeaderViewHolder implements AsyncExpandableCollectionView.OnGroupStateChangeListener {
 
         private final TextView textView;
-        private final int mGroupOrdinal;
-        private final AsyncExpandableCollectionView mAsyncExpandableCollectionView;
 
         public MyHeaderViewHolder(View v, int groupOrdinal, AsyncExpandableCollectionView asyncExpandableCollectionView) {
-            super(v);
-            mGroupOrdinal = groupOrdinal;
-            mAsyncExpandableCollectionView = asyncExpandableCollectionView;
-            // Define click listener for the ViewHolder's View.
-            v.setOnClickListener(this);
+            super(v, groupOrdinal, asyncExpandableCollectionView);
             textView = (TextView) v.findViewById(R.id.textView);
         }
 
 
-
         public TextView getTextView() {
             return textView;
-        }
-
-        @Override
-        public void onClick(View v) {
-            mAsyncExpandableCollectionView.onGroupClicked(mGroupOrdinal, this);
         }
 
 
