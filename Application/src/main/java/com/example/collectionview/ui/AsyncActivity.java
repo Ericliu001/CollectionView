@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.android.recyclerview.R;
+import com.example.collectionview.R;
 import com.example.collectionview.widget.CollectionView;
 import com.example.collectionview.widget.async.AsyncExpandableCollectionView;
 import com.example.collectionview.widget.async.AsyncExpandableCollectionViewCallbacks;
