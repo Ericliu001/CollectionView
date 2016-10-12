@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import com.example.collectionview.widget.CollectionView;
+
 
 /**
  * Created by ericliu on 6/10/2016.
@@ -32,6 +34,16 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
     }
 
 
+    @Override
+    protected CollectionView.RowInformation<T1, T2> populatRoweData(RecyclerView.ViewHolder holder, int position) {
+        CollectionView.RowInformation<T1, T2> rowInfo = super.populatRoweData(holder, position);
+        if (rowInfo.isHeader()) {
+            mOnGroupStateChangeListeners.put((AsyncHeaderViewHolder) holder, rowInfo.getGroupOrdinal());
+        }
+
+        return rowInfo;
+    }
+
     public interface OnGroupStateChangeListener {
 
         void onGroupStartExpending();
@@ -42,14 +54,13 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
     }
 
 
-    public void onGroupClicked(int groupOrdinal, OnGroupStateChangeListener onGroupStateChangeListener) {
+    public void onGroupClicked(int groupOrdinal) {
         if (groupOrdinal != expandedGroupOrdinal) {
             onStartExpandingGroup(groupOrdinal);
         } else {
-            hideGroup(groupOrdinal);
+            collapseGroup(groupOrdinal);
         }
 
-        mOnGroupStateChangeListeners.put(onGroupStateChangeListener, groupOrdinal);
     }
 
 
@@ -58,9 +69,14 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
         mCallbacks = callbacks;
     }
 
-    private void hideGroup(int groupOrdinal) {
+    private void collapseGroup(int groupOrdinal) {
         expandedGroupOrdinal = -1;
         removeAllItemsInGroup(groupOrdinal);
+        for (OnGroupStateChangeListener onGroupStateChangeListener : mOnGroupStateChangeListeners.keySet()) {
+            if (mOnGroupStateChangeListeners.get(onGroupStateChangeListener) == groupOrdinal) {
+                onGroupStateChangeListener.onGroupCollapsed();
+            }
+        }
     }
 
 
@@ -68,14 +84,11 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
         int ordinal = 0;
         for (int i = 0; i < mInventory.getGroups().size(); i++) {
             ordinal = mInventory.getGroups().keyAt(i);
-            hideGroup(ordinal);
-        }
-
-        for (OnGroupStateChangeListener onGroupStateChangeListener : mOnGroupStateChangeListeners.keySet()) {
-            if (mOnGroupStateChangeListeners.get(onGroupStateChangeListener) != groupOrdinal) {
-                onGroupStateChangeListener.onGroupCollapsed();
+            if (ordinal != groupOrdinal) {
+                collapseGroup(ordinal);
             }
         }
+
 
         expandedGroupOrdinal = groupOrdinal;
         mCallbacks.onStartLoadingGroup(groupOrdinal);
@@ -87,7 +100,7 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
     }
 
 
-    public void onFinishLoadingGroup(List<T2> items) {
+    public void onFinishLoadingGroup(List<? extends T2> items) {
         if (expandedGroupOrdinal < 0) {
             return;
         }

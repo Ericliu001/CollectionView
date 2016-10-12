@@ -53,6 +53,16 @@ public class CollectionView<T1, T2> extends RecyclerView {
         mAdapter.notifyDataSetChanged();
     }
 
+
+    public T1 getHeader(int groupOrdinal) {
+        InventoryGroup<T1, T2> group = mInventory.mGroups.get(groupOrdinal);
+        if (group != null) {
+            return group.getHeaderItem();
+        } else {
+            return null;
+        }
+    }
+
     public void addGroup(InventoryGroup<T1, T2> group) {
         mInventory.addGroup(group);
         int itemCountBeforeGroup = mInventory.getRowCountBeforeGroup(group);
@@ -60,7 +70,7 @@ public class CollectionView<T1, T2> extends RecyclerView {
         mAdapter.notifyItemRangeInserted(itemCountBeforeGroup, group.getRowCount());
     }
 
-    public void addItemsInGroup(int groupOrdinal, List<T2> items) {
+    public void addItemsInGroup(int groupOrdinal, List<? extends T2> items) {
         InventoryGroup<T1, T2> group = mInventory.findGroup(groupOrdinal);
         int rowCountBeforeAddingItems = group.getRowCount();
         int itemCountBeforeGroup = mInventory.getRowCountBeforeGroup(group);
@@ -126,14 +136,14 @@ public class CollectionView<T1, T2> extends RecyclerView {
         }
     }
 
-    private void populatRoweData(ViewHolder holder, int position) {
+    protected RowInformation<T1, T2> populatRoweData(ViewHolder holder, int position) {
         if (mCallbacks == null) {
-            return;
+            return null;
         }
 
         RowInformation<T1, T2> rowInfo = computeRowContent(position);
         if (!rowInfo.isComputedSuccessful) {
-            return;
+            return null;
         }
 
         if (rowInfo.isHeader) {
@@ -143,6 +153,7 @@ public class CollectionView<T1, T2> extends RecyclerView {
             mCallbacks.bindCollectionItemView(getContext(), holder, rowInfo.groupOrdinal, item);
         }
 
+        return rowInfo;
     }
 
     private ViewHolder getRowViewHolder(ViewGroup parent, final int viewType) {
@@ -183,13 +194,21 @@ public class CollectionView<T1, T2> extends RecyclerView {
     }
 
 
-    private static class RowInformation<T1, T2> {
+    protected static class RowInformation<T1, T2> {
         boolean isComputedSuccessful = false;
         int row;
         boolean isHeader;
         int groupOrdinal;
         InventoryGroup<T1, T2> group;
         int positionInGroup;
+
+        public boolean isHeader() {
+            return isHeader;
+        }
+
+        public int getGroupOrdinal() {
+            return groupOrdinal;
+        }
     }
 
 
@@ -295,7 +314,7 @@ public class CollectionView<T1, T2> extends RecyclerView {
             return mItems.get(index);
         }
 
-        void addItems(List<T2> items) {
+        void addItems(List<? extends T2> items) {
             mItems.addAll(items);
         }
 

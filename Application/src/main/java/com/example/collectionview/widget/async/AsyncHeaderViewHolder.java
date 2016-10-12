@@ -18,10 +18,17 @@ public abstract class AsyncHeaderViewHolder extends RecyclerView.ViewHolder impl
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAsyncExpandableCollectionView.onGroupClicked(mGroupOrdinal, AsyncHeaderViewHolder.this);
+                mAsyncExpandableCollectionView.onGroupClicked(mGroupOrdinal);
+                onItemClick(v);
             }
         });
     }
+
+    /**
+     * triggered by onClick event, to be overriden.
+     * @param view
+     */
+    public void onItemClick(View view){}
 
 
 }

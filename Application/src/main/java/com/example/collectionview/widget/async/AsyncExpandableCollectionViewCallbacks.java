@@ -1,5 +1,6 @@
 package com.example.collectionview.widget.async;
 
+
 import com.example.collectionview.widget.CollectionViewCallbacks;
 
 /**
