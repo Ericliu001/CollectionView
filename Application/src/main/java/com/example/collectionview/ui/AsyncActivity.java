@@ -1,6 +1,5 @@
 package com.example.collectionview.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,10 +18,10 @@ import com.example.collectionview.widget.async.AsyncHeaderViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AsyncActivity extends Activity implements AsyncExpandableCollectionViewCallbacks<String, String> {
+public class AsyncActivity extends MainActivity implements AsyncExpandableCollectionViewCallbacks<String, News> {
 
-    private AsyncExpandableCollectionView mAsyncExpandableCollectionView;
-    private CollectionView.Inventory inventory;
+    private AsyncExpandableCollectionView<String, News> mAsyncExpandableCollectionView;
+    private CollectionView.Inventory<String, News> inventory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +32,15 @@ public class AsyncActivity extends Activity implements AsyncExpandableCollection
 
         inventory = new CollectionView.Inventory();
 
-        CollectionView.InventoryGroup group1 = inventory.newGroup(0); // groupOrdinal is the smallest, displayed first
+        CollectionView.InventoryGroup<String, News> group1 = inventory.newGroup(0); // groupOrdinal is the smallest, displayed first
         group1.setHeaderItem("Header 1");
 
 
-        CollectionView.InventoryGroup group2 = inventory.newGroup(2);
+        CollectionView.InventoryGroup<String, News> group2 = inventory.newGroup(2);
         group2.setHeaderItem("Header 2");
 
 
-        CollectionView.InventoryGroup group3 = inventory.newGroup(3); // 2 is smaller than 10, displayed second
+        CollectionView.InventoryGroup<String, News> group3 = inventory.newGroup(3); // 2 is smaller than 10, displayed second
         group3.setHeaderItem("Header 3");
 
         mAsyncExpandableCollectionView.updateInventory(inventory);
@@ -63,10 +62,16 @@ public class AsyncActivity extends Activity implements AsyncExpandableCollection
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                List<Object> items = new ArrayList<>();
-                items.add("Group x, item 1");
-                items.add("Group x, item 2");
-                items.add("Group x, item 3");
+                List<News> items = new ArrayList<>();
+                News news = new News();
+                news.setNewsTitle("Lawyers meet voluntary pro bono target for first time since 2013");
+                news.setNewsBody("A voluntary target for the amount of pro bono work done by Australian lawyers has been met for the first time since 2013. Key points: The Australian Pro Bono Centre's asks lawyers to do 35 hours of free community work a year; Pro bono services can help ...\n");
+                items.add(news);
+
+                news = new News();
+                news.setNewsTitle("HSC 2016: 77000 students to sit first exams across NSW");
+                news.setNewsBody("More than 77,000 NSW high school students will sit their first HSC exams this week as one of the final cohorts to sit the test before the NSW government enacts sweeping reforms across the state.");
+                items.add(news);
                 mAsyncExpandableCollectionView.onFinishLoadingGroup(items);
             }
         }.execute();
@@ -83,24 +88,9 @@ public class AsyncActivity extends Activity implements AsyncExpandableCollection
     }
 
     @Override
-    public RecyclerView.ViewHolder newCollectionItemView(Context context, int groupOrdinal, ViewGroup parent) {
-        // Create a new view.
-        View v = LayoutInflater.from(context)
-                .inflate(R.layout.header_row_item, parent, false);
-
-        return new MyHeaderViewHolder(v, groupOrdinal, mAsyncExpandableCollectionView);
-    }
-
-
-    @Override
     public void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, String headerItem) {
-        ((MyHeaderViewHolder) holder).getTextView().setText((String) headerItem);
-
-    }
-
-    @Override
-    public void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, String item) {
-
+        MyHeaderViewHolder myHeaderViewHolder = (MyHeaderViewHolder) holder;
+        myHeaderViewHolder.getTextView().setText(headerItem);
     }
 
     public static class MyHeaderViewHolder extends AsyncHeaderViewHolder implements AsyncExpandableCollectionView.OnGroupStateChangeListener {
@@ -109,7 +99,7 @@ public class AsyncActivity extends Activity implements AsyncExpandableCollection
 
         public MyHeaderViewHolder(View v, int groupOrdinal, AsyncExpandableCollectionView asyncExpandableCollectionView) {
             super(v, groupOrdinal, asyncExpandableCollectionView);
-            textView = (TextView) v.findViewById(android.R.id.title);
+            textView = (TextView) v.findViewById(R.id.title);
         }
 
 
