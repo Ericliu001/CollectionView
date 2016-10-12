@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.collectionview.R;
@@ -33,15 +34,24 @@ public class AsyncActivity extends MainActivity implements AsyncExpandableCollec
         inventory = new CollectionView.Inventory();
 
         CollectionView.InventoryGroup<String, News> group1 = inventory.newGroup(0); // groupOrdinal is the smallest, displayed first
-        group1.setHeaderItem("Header 1");
+        group1.setHeaderItem("Top Stories");
 
 
         CollectionView.InventoryGroup<String, News> group2 = inventory.newGroup(2);
-        group2.setHeaderItem("Header 2");
+        group2.setHeaderItem("World");
 
 
         CollectionView.InventoryGroup<String, News> group3 = inventory.newGroup(3); // 2 is smaller than 10, displayed second
-        group3.setHeaderItem("Header 3");
+        group3.setHeaderItem("Australia");
+
+        CollectionView.InventoryGroup<String, News> group4 = inventory.newGroup(4); // 2 is smaller than 10, displayed second
+        group4.setHeaderItem("International");
+
+        CollectionView.InventoryGroup<String, News> group5 = inventory.newGroup(5); // 2 is smaller than 10, displayed second
+        group5.setHeaderItem("Businesses");
+
+        CollectionView.InventoryGroup<String, News> group6 = inventory.newGroup(6); // 2 is smaller than 10, displayed second
+        group6.setHeaderItem("Technology");
 
         mAsyncExpandableCollectionView.updateInventory(inventory);
     }
@@ -82,7 +92,7 @@ public class AsyncActivity extends MainActivity implements AsyncExpandableCollec
     public RecyclerView.ViewHolder newCollectionHeaderView(Context context, int groupOrdinal, ViewGroup parent) {
         // Create a new view.
         View v = LayoutInflater.from(context)
-                .inflate(R.layout.header_row_item, parent, false);
+                .inflate(R.layout.header_row_item_async, parent, false);
 
         return new MyHeaderViewHolder(v, groupOrdinal, mAsyncExpandableCollectionView);
     }
@@ -96,10 +106,14 @@ public class AsyncActivity extends MainActivity implements AsyncExpandableCollec
     public static class MyHeaderViewHolder extends AsyncHeaderViewHolder implements AsyncExpandableCollectionView.OnGroupStateChangeListener {
 
         private final TextView textView;
+        private final ProgressBar mProgressBar;
 
         public MyHeaderViewHolder(View v, int groupOrdinal, AsyncExpandableCollectionView asyncExpandableCollectionView) {
             super(v, groupOrdinal, asyncExpandableCollectionView);
             textView = (TextView) v.findViewById(R.id.title);
+            mProgressBar = (ProgressBar) v.findViewById(R.id.progressBar);
+            mProgressBar.getIndeterminateDrawable().setColorFilter(0xFFFFFFFF,
+                    android.graphics.PorterDuff.Mode.MULTIPLY);
         }
 
 
@@ -110,17 +124,17 @@ public class AsyncActivity extends MainActivity implements AsyncExpandableCollec
 
         @Override
         public void onGroupStartExpending() {
-
+            mProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onGroupExpanded() {
-
+            mProgressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onGroupCollapsed() {
-
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 }
