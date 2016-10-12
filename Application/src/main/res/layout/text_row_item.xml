@@ -51,7 +51,7 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_tiny"
             android:textAppearance="@style/TextAppearance.Body2"
             tools:text="A long-serving former solicitor-general has launched a withering assessment of Attorney-General George Brandis' relationship with the nation's second law officer."/>
 
