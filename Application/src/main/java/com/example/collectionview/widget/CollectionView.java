@@ -1,5 +1,8 @@
 package com.example.collectionview.widget;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,9 +12,6 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Eric Liu on 18/01/2016.
  */
@@ -19,6 +19,7 @@ public class CollectionView<T1, T2> extends RecyclerView {
     private static final String TAG = CollectionView.class.getSimpleName();
     private static final int VIEWTYPE_HEADER = 0;
     private static final int VIEW_TYPE_NON_HEADER = 10;
+    protected final LinearLayoutManager mLinearLayoutManager;
 
     protected Inventory<T1, T2> mInventory = new Inventory();
     private CollectionViewCallbacks<T1, T2> mCallbacks = null;
@@ -36,9 +37,9 @@ public class CollectionView<T1, T2> extends RecyclerView {
 
     public CollectionView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        this.setLayoutManager(layoutManager);
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        this.setLayoutManager(mLinearLayoutManager);
         mAdapter = new MyListAdapter();
         setAdapter(mAdapter);
     }
@@ -209,10 +210,14 @@ public class CollectionView<T1, T2> extends RecyclerView {
         public int getGroupOrdinal() {
             return groupOrdinal;
         }
+
+        public int getPositionInGroup() {
+            return positionInGroup;
+        }
     }
 
 
-    private RowInformation<T1, T2> computeRowContent(int row) {
+    protected RowInformation<T1, T2> computeRowContent(int row) {
         RowInformation<T1, T2> result = new RowInformation<T1, T2>();
         int rowCounter = 0;
         int positionInGroup;
@@ -285,7 +290,7 @@ public class CollectionView<T1, T2> extends RecyclerView {
             return mOrdinal;
         }
 
-        T1 getHeaderItem() {
+        public T1 getHeaderItem() {
             return mHeaderItem;
         }
 
@@ -310,13 +315,14 @@ public class CollectionView<T1, T2> extends RecyclerView {
         }
 
 
-        T2 getItem(int index) {
+        public T2 getItem(int index) {
             return mItems.get(index);
         }
 
         void addItems(List<? extends T2> items) {
             mItems.addAll(items);
         }
+
 
     }
 
@@ -378,10 +384,14 @@ public class CollectionView<T1, T2> extends RecyclerView {
             return -1;
         }
 
-        int getRowCountBeforeGroup(InventoryGroup group) {
+        public int getRowCountBeforeGroup(InventoryGroup group) {
+            return getRowCountBeforeGroup(group.mOrdinal);
+        }
+
+        public int getRowCountBeforeGroup(int groupOrdinal) {
             int count = 0;
             for (int i = 0; i < mGroups.size(); i++) {
-                if (group.mOrdinal == mGroups.keyAt(i)) {
+                if (groupOrdinal == mGroups.keyAt(i)) {
                     break;
                 }
                 int key = mGroups.keyAt(i);
@@ -389,6 +399,7 @@ public class CollectionView<T1, T2> extends RecyclerView {
             }
             return count;
         }
+
 
         public SparseArray<InventoryGroup<T1, T2>> getGroups() {
             return mGroups;

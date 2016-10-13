@@ -1,13 +1,13 @@
 package com.example.collectionview.widget.async;
 
+import java.util.List;
+import java.util.WeakHashMap;
+
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import com.example.collectionview.widget.CollectionView;
-
-import java.util.List;
-import java.util.WeakHashMap;
 
 
 /**
@@ -17,8 +17,8 @@ import java.util.WeakHashMap;
 public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2> {
 
     private AsyncExpandableCollectionViewCallbacks<T1, T2> mCallbacks;
-    private WeakHashMap<OnGroupStateChangeListener, Integer> mOnGroupStateChangeListeners = new WeakHashMap<>();
-    private int expandedGroupOrdinal = -1;
+    protected WeakHashMap<OnGroupStateChangeListener, Integer> mOnGroupStateChangeListeners = new WeakHashMap<>();
+    protected int expandedGroupOrdinal = -1;
 
 
     public AsyncExpandableCollectionView(Context context) {
@@ -69,7 +69,7 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
         mCallbacks = callbacks;
     }
 
-    private void collapseGroup(int groupOrdinal) {
+    protected void collapseGroup(int groupOrdinal) {
         expandedGroupOrdinal = -1;
         removeAllItemsInGroup(groupOrdinal);
         for (OnGroupStateChangeListener onGroupStateChangeListener : mOnGroupStateChangeListeners.keySet()) {
@@ -80,7 +80,7 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
     }
 
 
-    private void onStartExpandingGroup(int groupOrdinal) {
+    protected void onStartExpandingGroup(int groupOrdinal) {
         int ordinal = 0;
         for (int i = 0; i < mInventory.getGroups().size(); i++) {
             ordinal = mInventory.getGroups().keyAt(i);
@@ -99,9 +99,9 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
     }
 
 
-    public void onFinishLoadingGroup(int groupOrdinal, List<T2> items) {
+    public boolean onFinishLoadingGroup(int groupOrdinal, List<T2> items) {
         if (expandedGroupOrdinal < 0 || groupOrdinal != expandedGroupOrdinal) {
-            return;
+            return false;
         }
 
         addItemsInGroup(expandedGroupOrdinal, items);
@@ -110,6 +110,8 @@ public class AsyncExpandableCollectionView<T1, T2> extends CollectionView<T1, T2
                 onGroupStateChangeListener.onGroupExpanded();
             }
         }
+
+        return true;
     }
 
 }
