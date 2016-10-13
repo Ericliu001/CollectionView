@@ -1,5 +1,10 @@
 package com.example.collectionview.ui;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,11 +21,7 @@ import com.example.collectionview.widget.async.AsyncExpandableCollectionView;
 import com.example.collectionview.widget.async.AsyncExpandableCollectionViewCallbacks;
 import com.example.collectionview.widget.async.AsyncHeaderViewHolder;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
-public class AsyncActivity extends MainActivity implements AsyncExpandableCollectionViewCallbacks<String, News> {
+public class AsyncActivity extends Activity implements AsyncExpandableCollectionViewCallbacks<String, News> {
 
     private AsyncExpandableCollectionView<String, News> mAsyncExpandableCollectionView;
     private CollectionView.Inventory<String, News> inventory;
@@ -128,9 +129,25 @@ public class AsyncActivity extends MainActivity implements AsyncExpandableCollec
     }
 
     @Override
+    public RecyclerView.ViewHolder newCollectionItemView(Context context, int groupOrdinal, ViewGroup parent) {
+        // Create a new view.
+        View v = LayoutInflater.from(context)
+                .inflate(R.layout.text_row_item_async, parent, false);
+
+        return new MainActivity.NewsItemHolder(v);
+    }
+
+    @Override
     public void bindCollectionHeaderView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, String headerItem) {
         MyHeaderViewHolder myHeaderViewHolder = (MyHeaderViewHolder) holder;
         myHeaderViewHolder.getTextView().setText(headerItem);
+    }
+
+    @Override
+    public void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int groupOrdinal, News item) {
+        MainActivity.NewsItemHolder newsItemHolder = (MainActivity.NewsItemHolder) holder;
+        newsItemHolder.getTextViewTitle().setText(item.getNewsTitle());
+        newsItemHolder.getTextViewDescrption().setText(item.getNewsBody());
     }
 
     public static class MyHeaderViewHolder extends AsyncHeaderViewHolder implements AsyncExpandableCollectionView.OnGroupStateChangeListener {

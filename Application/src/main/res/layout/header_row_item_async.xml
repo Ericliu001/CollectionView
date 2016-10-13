@@ -21,9 +21,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/explore_io_card_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="15dp"
-    android:layout_marginRight="15dp"
+    android:layout_height="90dp"
+    android:layout_marginLeft="@dimen/spacing_normal"
+    android:layout_marginRight="@dimen/spacing_normal"
     app:cardBackgroundColor="@color/colorPrimaryDark"
     app:cardCornerRadius="@dimen/card_corner_radius"
     app:cardElevation="@dimen/card_header_elevation"
@@ -61,6 +61,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_medium"
             android:visibility="gone"/>
+
+        
     </RelativeLayout>
 </android.support.v7.widget.CardView>
 
