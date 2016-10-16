@@ -12,8 +12,8 @@
     tools:context="com.example.collectionview.ui.AsyncActivity">
 
 
-    <com.example.collectionview.widget.async.AsyncExpandableCollectionView
-        android:id="@+id/asyncExpandableCollectionView"
+    <com.ericliu.asyncexpandablelist.async.AsyncExpandableListView
+        android:id="@+id/AsyncExpandableListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

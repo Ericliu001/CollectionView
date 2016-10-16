@@ -1,4 +1,4 @@
-package com.example.collectionview.ui;
+package com.example.collectionview.entity;
 
 /**
  * Created by ericliu on 12/10/16.

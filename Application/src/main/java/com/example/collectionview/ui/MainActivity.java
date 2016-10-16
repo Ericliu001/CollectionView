@@ -31,9 +31,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ericliu.asyncexpandablelist.CollectionView;
+import com.ericliu.asyncexpandablelist.CollectionViewCallbacks;
 import com.example.collectionview.R;
-import com.example.collectionview.widget.CollectionView;
-import com.example.collectionview.widget.CollectionViewCallbacks;
+import com.example.collectionview.entity.News;
 
 /**
  * A simple launcher activity containing a summary sample description, sample log and a custom
@@ -59,7 +60,7 @@ public class MainActivity extends Activity implements CollectionViewCallbacks<St
         mCollectionView = (CollectionView) findViewById(R.id.collectionView);
 
 
-        inventory = new CollectionView.Inventory();
+        inventory = CollectionView.Inventory.newInstance();
 
         CollectionView.InventoryGroup<String, News> group1 = inventory.newGroup(0); // groupOrdinal is the smallest, displayed first
         News news;
